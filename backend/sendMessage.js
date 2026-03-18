@@ -5,7 +5,7 @@ const token = process.env.TELEGRAM_TOKEN
 const chatId = process.env.TELEGRAM_CHAT_ID
 
 client.on('connect', () => {
-  client.subscribe('zigbee2mqtt/Motion Sensor 1')
+  client.subscribe('zigbee2mqtt/motion-sensor-1')
 })
 
 client.on('message', (topic, payload) => {

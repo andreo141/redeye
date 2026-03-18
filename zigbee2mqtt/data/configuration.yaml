@@ -5,4 +5,4 @@ frontend:
   enabled: true
 devices:
   '0x983268fffe00b71e':
-    friendly_name: Motion Sensor 1
+    friendly_name: motion-sensor-1
