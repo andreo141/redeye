@@ -1,0 +1,2 @@
+mqtt:
+  server: mqtt://mosquitto:1883

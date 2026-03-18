@@ -1,0 +1,36 @@
+services:
+  zigbee2mqtt:
+    container_name: redeye-zigbee2mqtt
+    image: ghcr.io/koenkk/zigbee2mqtt
+    restart: unless-stopped
+    volumes:
+      - ./zigbee2mqtt/data:/app/data
+      - /run/udev:/run/udev:ro
+    ports:
+      # Frontend port
+      - 8080:8080
+    environment:
+      - TZ=Europe/Brussels
+    devices:
+      - /dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_94ea6715e5ffef11b40f8d256d9880ab-if00-port0:/dev/ttyUSB0
+    group_add:
+      - dialout
+    user: 1001:1001
+
+  backend:
+    container_name: redeye-backend
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      - mosquitto
+    env_file:
+      - ./backend/.env
+
+  mosquitto:
+    container_name: redeye-mosquitto
+    image: eclipse-mosquitto
+    restart: unless-stopped
+    ports:
+      - 1883:1883
+    volumes:
+      - ./mosquitto/config:/mosquitto/config

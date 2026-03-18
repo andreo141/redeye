@@ -1,0 +1,8 @@
+mqtt:
+  server: mqtt://mosquitto:1883
+version: 5
+frontend:
+  enabled: true
+devices:
+  '0x983268fffe00b71e':
+    friendly_name: Motion Sensor 1

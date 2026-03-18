@@ -1,0 +1,7 @@
+{
+  "name": "redeye-backend",
+  "module": "sendMessage.js",
+  "dependencies": {
+    "mqtt": "^5.0.0"
+  }
+}
