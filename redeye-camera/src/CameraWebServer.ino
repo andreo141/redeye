@@ -135,6 +135,9 @@ void setup() {
 
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
+  
+  Serial.print("Connecting to : ");
+  Serial.println(ssid);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
