@@ -21,31 +21,59 @@ client.on("reconnect", function () {
   console.log("Reconnecting to MQTT broker...");
 });
 
-client.on("message", (topic, payload) => {
+client.on("message", async (topic, payload) => {
   const data = JSON.parse(payload.toString());
 
   if (data.occupancy === true) {
-    sendTelegram(
-      `Motion detected in Bergkot at ${new Date().toLocaleTimeString("nl-BE")}!`,
-    );
+    const photo = await getSnapshot();
+    const message = `Motion detected in Bergkot at ${new Date().toLocaleTimeString("nl-BE")}!`;
+
+    await sendTelegramMessageToBot(photo, message);
   }
 });
 
-async function sendTelegram(message) {
+async function getSnapshot() {
   try {
-    const res = await fetch(
-      `https://api.telegram.org/bot${token}/sendMessage`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: message,
-        }),
-      },
-    );
+    const res = await fetch("http://192.168.0.120/capture");
+    const photo = await res.bytes();
+    return new Blob([photo], { type: "image/jpeg" });
+  } catch {
+    console.error("Error while trying to fetch snapshot.");
+  }
+}
 
-    if (!res.ok) console.error("Telegram error:", await res.text());
+async function sendTextMessage(message) {
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+    method: "POST",
+    body: JSON.stringify({
+      chat_id: chatId,
+      text: message,
+    }),
+  });
+  if (!res.ok) console.error("Telegram error:", await res.text());
+}
+
+async function sendPhoto(photo, message) {
+  const form = new FormData();
+  form.append("chat_id", chatId);
+  form.append("photo", photo);
+  form.append("caption", message);
+
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+    method: "POST",
+    body: form,
+  });
+  if (!res.ok) console.error("Telegram error:", await res.text());
+}
+
+async function sendTelegramMessageToBot(photo, message) {
+  try {
+    if (!photo) {
+      console.error("No snapshot available");
+      await sendTextMessage(message);
+    } else {
+      await sendPhoto(photo, message);
+    }
   } catch (err) {
     console.error("Failed to send Telegram message.");
   }
