@@ -39,6 +39,8 @@
 const char* ssid = WIFI_SSID;
 const char* password = WIFI_PASSWORD;
 
+void startCameraServer();
+void setupLedFlash(int pin);
 
 void setup() {
   Serial.begin(115200);
@@ -126,6 +128,10 @@ void setup() {
   s->set_vflip(s, 1);
 #endif
 
+// Setup LED FLash if LED pin is defined in camera_pins.h
+#if defined(LED_GPIO_NUM)
+  setupLedFlash(LED_GPIO_NUM);
+#endif
 
   WiFi.begin(ssid, password);
   WiFi.setSleep(false);
@@ -136,6 +142,8 @@ void setup() {
   }
   Serial.println("");
   Serial.println("WiFi connected");
+
+  startCameraServer();
 
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
