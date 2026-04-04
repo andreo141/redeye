@@ -34,7 +34,7 @@ client.on("message", async (topic, payload) => {
 
 async function getSnapshot() {
   try {
-    const res = await fetch("redeye-cam.local/capture");
+    const res = await fetch("http://redeye-cam.local/capture");
     const photo = await res.bytes();
     return new Blob([photo], { type: "image/jpeg" });
   } catch {
