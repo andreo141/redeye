@@ -25,6 +25,7 @@ client.on("message", async (topic, payload) => {
   const data = JSON.parse(payload.toString());
 
   if (data.occupancy === true) {
+    console.log("Motion detected"); 
     const photo = await getSnapshot();
     const message = `Motion detected in Bergkot at ${new Date().toLocaleTimeString("nl-BE")}!`;
 
@@ -45,6 +46,7 @@ async function getSnapshot() {
 async function sendTextMessage(message) {
   const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" }, 
     body: JSON.stringify({
       chat_id: chatId,
       text: message,
