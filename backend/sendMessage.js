@@ -5,9 +5,8 @@ const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 const MQTT_BROKER = process.env.MQTT_BROKER_URL ?? "mqtt://mosquitto:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
-const SNAPSHOT_URL =
-  process.env.SNAPSHOT_URL ?? "http://redeye-cam.local/capture";
-const SNAPSHOT_TIMEOUT_MS = 5000;
+const CAMERA_URL = process.env.CAMERA_URL ?? "http://redeye-cam.local/capture";
+const CAMERA_TIMEOUT_MS = 5000;
 
 if (!token || !chatId) {
   console.error("FATAL: TELEGRAM_TOKEN and TELEGRAM_CHAT_ID must be set.");
