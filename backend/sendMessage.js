@@ -69,8 +69,9 @@ mqttClient.on("message", async (topic, payload) => {
 
 async function getSnapshot() {
   try {
-    const res = await fetch(SNAPSHOT_URL, {
-      signal: AbortSignal.timeout(SNAPSHOT_TIMEOUT_MS),
+    await fetch(`${CAMERA_URL}/control?var=led_intensity&val=255`);
+    const res = await fetch(CAMERA_URL, {
+      signal: AbortSignal.timeout(CAMERA_TIMEOUT_MS),
     });
 
     if (!res.ok) throw new Error("Failed to fetch snapshot");
@@ -82,9 +83,10 @@ async function getSnapshot() {
     } else {
       console.error("Error while trying to fetch snapshot.", err);
     }
+    return null;
+  } finally {
+    await fetch(`${CAMERA_URL}/control?var=led_intensity&val=0`);
   }
-
-  return null;
 }
 
 async function sendTextMessage(message) {
