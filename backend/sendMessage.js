@@ -61,7 +61,7 @@ mqttClient.on("message", async (topic, payload) => {
   try {
     const sentMessageId = await sendTextMessage(message);
     const photo = await getSnapshot();
-    if (photo) await sendPhoto(photo, message, sentMessageId);
+    if (photo) await sendPhoto(photo, sentMessageId);
   } catch (err) {
     console.error("Error while sending Telegram message:", err);
   }
@@ -105,11 +105,10 @@ async function sendTextMessage(message) {
   return data.result.message_id;
 }
 
-async function sendPhoto(photo, message, replyToMessageId) {
+async function sendPhoto(photo, replyToMessageId) {
   const form = new FormData();
   form.append("chat_id", chatId);
   form.append("photo", photo);
-  form.append("caption", message);
 
   if (replyToMessageId)
     form.append("reply_to_message_id", String(replyToMessageId));
