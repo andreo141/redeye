@@ -6,7 +6,7 @@ const chatId = process.env.TELEGRAM_CHAT_ID;
 const MQTT_BROKER = process.env.MQTT_BROKER_URL ?? "mqtt://mosquitto:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
 const CAMERA_URL = process.env.CAMERA_URL;
-const CAMERA_TIMEOUT_MS = process.env.Number(CAMERA_TIMEOUT_MS) ?? 5000;
+const CAMERA_TIMEOUT = Number(process.env.CAMERA_TIMEOUT_MS) ?? 5000;
 
 if (!token || !chatId || !CAMERA_URL) {
   console.error(
@@ -72,7 +72,7 @@ async function getSnapshot() {
   try {
     await fetch(`${CAMERA_URL}/control?var=led_intensity&val=255`);
     const res = await fetch(CAMERA_URL, {
-      signal: AbortSignal.timeout(CAMERA_TIMEOUT_MS),
+      signal: AbortSignal.timeout(CAMERA_TIMEOUT),
     });
 
     if (!res.ok) throw new Error("Failed to fetch snapshot");
