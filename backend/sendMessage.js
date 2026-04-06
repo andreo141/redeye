@@ -6,7 +6,7 @@ const chatId = process.env.TELEGRAM_CHAT_ID;
 const MQTT_BROKER = process.env.MQTT_BROKER_URL ?? "mqtt://mosquitto:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
 const CAMERA_URL = process.env.CAMERA_URL;
-const CAMERA_TIMEOUT = 10000
+const CAMERA_TIMEOUT = 10000;
 
 if (!token || !chatId || !CAMERA_URL) {
   console.error(
@@ -86,7 +86,11 @@ async function getSnapshot() {
     }
     return null;
   } finally {
-    await fetch(`${CAMERA_URL}/control?var=led_intensity&val=0`);
+    try {
+      await fetch(`${CAMERA_URL}/control?var=led_intensity&val=0`);
+    } catch {
+      console.error("Failed to turn off flash.");
+    }
   }
 }
 

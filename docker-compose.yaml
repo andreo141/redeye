@@ -17,6 +17,15 @@ services:
       - dialout
     user: 1001:1001
 
+  dashboard:
+    container_name: redeye-dashboard
+    build: ./dashboard
+    restart: unless-stopped
+    ports:
+      - 3000:3000
+    env_file:
+      - ./dashboard/.env
+
   backend:
     container_name: redeye-backend
     build: ./backend
