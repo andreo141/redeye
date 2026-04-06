@@ -34,6 +34,8 @@ services:
       - mosquitto
     env_file:
       - ./backend/.env
+    ports:
+      - 3001:3001
 
   mosquitto:
     container_name: redeye-mosquitto

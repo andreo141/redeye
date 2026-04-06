@@ -1,5 +1,7 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
+import { storeAlert } from "./data/db.js";
+import "./server.js";
 
 const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -61,8 +63,12 @@ mqttClient.on("message", async (topic, payload) => {
 
   try {
     const sentMessageId = await sendTextMessage(message);
+
     const photo = await getSnapshot();
-    if (photo) await sendPhoto(photo, sentMessageId);
+    if (photo) {
+      await sendPhoto(photo, sentMessageId);
+    }
+    storeAlert(topic, "Bergkot", photo ? "snapshot.jpg" : null);
   } catch (err) {
     console.error("Error while sending Telegram message:", err);
   }
