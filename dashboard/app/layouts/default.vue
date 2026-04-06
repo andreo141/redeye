@@ -9,7 +9,11 @@
       <nav class="nav">
         <span class="nav-label">Monitor</span>
 
-        <NuxtLink to="/dashboard" class="nav-item" active-class="active">
+        <NuxtLink
+          to="/dashboard/overview"
+          class="nav-item"
+          active-class="active"
+        >
           <svg
             class="nav-icon"
             viewBox="0 0 16 16"
@@ -114,7 +118,7 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const titles: Record<string, string> = {
-  "/dashboard": "Overview",
+  "/dashboard/overview": "Overview",
   "/dashboard/alerts": "Alert history",
   "/dashboard/calendar": "Calendar",
   "/dashboard/sensors": "Sensors",
