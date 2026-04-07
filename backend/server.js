@@ -15,6 +15,7 @@ const app = new Elysia()
   .get("/api/alerts", () => getAlerts())
 
   .post("/api/camera/register", ({ body }) => {
+    console.log("body", body);
     const ip = body?.ip;
     console.log("ip", ip);
     if (!ip) {
