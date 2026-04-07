@@ -7,7 +7,7 @@ const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 const MQTT_BROKER = process.env.MQTT_BROKER_URL ?? "mqtt://mosquitto:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
-const CAMERA_URL = getCameraUrl();
+const CAMERA_URL = await getCameraUrl();
 const CAMERA_TIMEOUT = 10000;
 
 if (!token || !chatId || !CAMERA_URL) {
