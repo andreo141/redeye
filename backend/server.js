@@ -16,6 +16,7 @@ const app = new Elysia()
 
   .post("/api/camera/register", ({ body }) => {
     const ip = body?.ip;
+    console.log("ip", ip);
     if (!ip) {
       console.error(
         "Camera registration failed: IP address missing in request body",

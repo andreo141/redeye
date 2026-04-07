@@ -7,13 +7,10 @@ const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 const MQTT_BROKER = process.env.MQTT_BROKER_URL ?? "mqtt://mosquitto:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
-const CAMERA_URL = await getCameraUrl();
 const CAMERA_TIMEOUT = 10000;
 
-if (!token || !chatId || !CAMERA_URL) {
-  console.error(
-    "FATAL: TELEGRAM_TOKEN, TELEGRAM_CHAT_ID and CAMERA_URL must be set.",
-  );
+if (!token || !chatId) {
+  console.error("FATAL: TELEGRAM_TOKEN and TELEGRAM_CHAT_ID must be set.");
   process.exit(1);
 }
 
@@ -80,9 +77,16 @@ mqttClient.on("message", async (topic, payload) => {
 });
 
 async function getSnapshot() {
+  const cameraUrl = getCameraUrl();
+
+  if (!cameraUrl) {
+    console.error("No camera URL available.");
+    return null;
+  }
+
   try {
-    await fetch(`${CAMERA_URL}/control?var=led_intensity&val=255`);
-    const res = await fetch(`${CAMERA_URL}/capture`, {
+    await fetch(`${cameraUrl}/control?var=led_intensity&val=255`);
+    const res = await fetch(`${cameraUrl}/capture`, {
       signal: AbortSignal.timeout(CAMERA_TIMEOUT),
     });
 
@@ -98,7 +102,7 @@ async function getSnapshot() {
     return null;
   } finally {
     try {
-      await fetch(`${CAMERA_URL}/control?var=led_intensity&val=0`);
+      await fetch(`${cameraUrl}/control?var=led_intensity&val=0`);
     } catch {
       console.error("Failed to turn off flash.");
     }
