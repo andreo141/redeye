@@ -1,5 +1,6 @@
 #include "esp_camera.h"
 #include <WiFi.h>
+#include <HTTPClient.h>
 
 //
 // WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
@@ -151,6 +152,14 @@ void setup() {
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
+
+  HTTPClient http;
+  http.begin("http://192.168.0.148:3001/api/camera/register");
+  http.addHeader("Content-Type", "application/json");
+
+  String body = "{\"ip\":\"" + WiFi.localIP().toString() + "\"}";
+  http.POST(body);
+  http.end();
 
 
 }

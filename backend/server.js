@@ -6,9 +6,19 @@ import { EventEmitter } from "events";
 export const emitter = new EventEmitter();
 emitter.setMaxListeners(50); // one per connected dashboard client
 
+export const getCameraUrl = () => cameraUrl;
+
 const app = new Elysia()
   .use(cors())
+
   .get("/api/alerts", () => getAlerts())
+
+  .post("/api/camera/register", ({ body }) => {
+    const cameraUrl = `http://${body.ip}`;
+    console.log(`Camera registered at ${cameraUrl}`);
+    return { ok: true };
+  })
+
   .get("/api/alerts/stream", ({ set }) => {
     set.headers["content-type"] = "text/event-stream";
     set.headers["cache-control"] = "no-cache";
@@ -39,4 +49,3 @@ const app = new Elysia()
   .listen(process.env.API_PORT ?? 3001);
 
 console.log(`API server running on port ${process.env.API_PORT ?? 3001}`);
-

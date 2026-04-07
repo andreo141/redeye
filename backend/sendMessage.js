@@ -1,13 +1,13 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
 import { storeAlert } from "./data/db.js";
-import { emitter } from "./server.js";
+import { emitter, getCameraUrl } from "./server.js";
 
 const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
 const MQTT_BROKER = process.env.MQTT_BROKER_URL ?? "mqtt://mosquitto:1883";
 const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
-const CAMERA_URL = process.env.CAMERA_URL;
+const CAMERA_URL = getCameraUrl();
 const CAMERA_TIMEOUT = 10000;
 
 if (!token || !chatId || !CAMERA_URL) {
@@ -140,4 +140,3 @@ async function sendPhoto(photo, replyToMessageId) {
     throw new Error(`Telegram sendPhoto failed: ${await res.text()}`);
   }
 }
-
