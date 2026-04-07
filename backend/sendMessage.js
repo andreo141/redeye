@@ -52,6 +52,7 @@ mqttClient.on("message", async (topic, payload) => {
 
   if (data.occupancy !== true) return;
   if (isCoolingDown()) return;
+
   const detectionTime = new Date().toLocaleTimeString("nl-BE", {
     timeZone: "Europe/Brussels",
   });
@@ -69,7 +70,7 @@ mqttClient.on("message", async (topic, payload) => {
     emitter.emit("alert", {
       sensor: topic,
       location: "Bergkot",
-      created_at: new Date(),
+      created_at: detectionTime,
     });
   } catch (err) {
     console.error("Error while sending Telegram message:", err);

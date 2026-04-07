@@ -23,9 +23,10 @@
 </template>
 
 <script setup lang="ts">
-const alerts = ref([])
+const alerts = useState('alerts', () => [])
+
 const { data } = await useFetch(`http://backend:3001/api/alerts`)
-alerts.value = data.value ?? []
+if (alerts.value.length === 0) alerts.value = data.value ?? []
 
 let source: EventSource
 
@@ -40,4 +41,3 @@ onUnmounted(() => {
   source?.close()
 })
 </script>
-
