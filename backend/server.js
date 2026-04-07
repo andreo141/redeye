@@ -7,6 +7,7 @@ export const emitter = new EventEmitter();
 emitter.setMaxListeners(50); // one per connected dashboard client
 
 export const getCameraUrl = () => cameraUrl;
+let cameraUrl = null;
 
 const app = new Elysia()
   .use(cors())
@@ -14,7 +15,15 @@ const app = new Elysia()
   .get("/api/alerts", () => getAlerts())
 
   .post("/api/camera/register", ({ body }) => {
-    const cameraUrl = `http://${body.ip}`;
+    const ip = body?.ip;
+    if (!ip) {
+      console.error(
+        "Camera registration failed: IP address missing in request body",
+      );
+      return { ok: false, error: "IP address is required" };
+    }
+
+    cameraUrl = `http://${body.ip}`;
     console.log(`Camera registered at ${cameraUrl}`);
     return { ok: true };
   })
@@ -43,6 +52,11 @@ const app = new Elysia()
 
         emitter.on("alert", onAlert);
         send("connected");
+
+        request.signal.addEventListener("abort", () => {
+          emitter.off("alert", onAlert);
+          controller.close();
+        });
       },
     });
   })
