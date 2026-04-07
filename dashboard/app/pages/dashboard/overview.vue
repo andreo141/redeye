@@ -2,7 +2,7 @@
   <main>
     <h1>Latest Alerts</h1>
     <br />
-    <div v-if="alerts.length === 0">
+    <div v-if="!alerts || alerts.length === 0">
       <p>No alerts yet.</p>
     </div>
     <ul v-else>
@@ -12,7 +12,7 @@
             <div class="alert-topic">{{ alert.sensor }}</div>
             <div class="alert-topic">{{ alert.location }}</div>
             <div class="alert-timestamp">
-              {{ new Date(alert.created_at).toLocaleString() }}
+              {{ alert.created_at }}
             </div>
           </div>
         </div>
@@ -23,6 +23,21 @@
 </template>
 
 <script setup lang="ts">
-const { data } = await useFetch('http://backend:3001/api/alerts')
-const alerts = computed(() => data.value || [])
+const alerts = ref([])
+const { data } = await useFetch(`http://backend:3001/api/alerts`)
+alerts.value = data.value ?? []
+
+let source: EventSource
+
+onMounted(() => {
+  source = new EventSource(`http://192.168.0.148:3001/api/alerts/stream`)
+  source.onmessage = (e) => {
+    if (e.data === 'connected') return
+    alerts.value.unshift(JSON.parse(e.data))
+  }
+})
+onUnmounted(() => {
+  source?.close()
+})
 </script>
+
