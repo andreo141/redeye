@@ -54,11 +54,6 @@ const app = new Elysia()
 
         emitter.on("alert", onAlert);
         send("connected");
-
-        request.signal.addEventListener("abort", () => {
-          emitter.off("alert", onAlert);
-          controller.close();
-        });
       },
     });
   })
