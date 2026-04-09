@@ -23,21 +23,17 @@
 </template>
 
 <script setup lang="ts">
-const alerts = useState('alerts', () => [])
+const alerts = ref([])
 
-const { data } = await useFetch(`http://backend:3001/api/alerts`)
-if (alerts.value.length === 0) alerts.value = data.value ?? []
+const fetchAlerts = async () => {
+  const { data } = await useFetch('http://backend:3001/api/alerts')
+  alerts.value = data.value ?? []
+}
 
-let source: EventSource
+await fetchAlerts()
 
 onMounted(() => {
-  source = new EventSource(`http://192.168.0.148:3001/api/alerts/stream`)
-  source.onmessage = (e) => {
-    if (e.data === 'connected') return
-    alerts.value.unshift(JSON.parse(e.data))
-  }
-})
-onUnmounted(() => {
-  source?.close()
+  const interval = setInterval(fetchAlerts, 30_000)
+  onUnmounted(() => clearInterval(interval))
 })
 </script>

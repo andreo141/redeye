@@ -1,7 +1,7 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
 import { storeAlert } from "./data/db.js";
-import { emitter, getCameraUrl } from "./server.js";
+import { getCameraUrl } from "./server.js";
 
 const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -67,11 +67,6 @@ mqttClient.on("message", async (topic, payload) => {
       await sendPhoto(photo, sentMessageId);
     }
     storeAlert(topic, "Bergkot", photo ? "snapshot.jpg" : null);
-    emitter.emit("alert", {
-      sensor: topic,
-      location: "Bergkot",
-      created_at: detectionTime,
-    });
   } catch (err) {
     console.error("Error while sending Telegram message:", err);
   }
