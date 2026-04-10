@@ -19,4 +19,19 @@ export default defineNuxtConfig({
       stylistic: false,
     },
   },
+
+  runtimeConfig: {
+    public: {
+      apiBase: "/api",
+    },
+  },
+
+  devServer: {
+    proxy: {
+      "/api": {
+        target: process.env.API_PROXY_TARGET || "http://backend:3001",
+        changeOrigin: true,
+      },
+    },
+  },
 });

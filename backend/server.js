@@ -1,16 +1,14 @@
 import { Elysia } from "elysia";
-import { cors } from "@elysiajs/cors";
 import { getAlerts } from "./data/db.js";
 
 export const getCameraUrl = () => cameraUrl;
 let cameraUrl = null;
 
 const app = new Elysia()
-  .use(cors())
 
-  .get("/api/alerts", () => getAlerts())
+  .get("/alerts", () => getAlerts())
 
-  .post("/api/camera/register", ({ body }) => {
+  .post("/camera/register", ({ body }) => {
     const ip = body?.ip;
 
     if (!ip) {

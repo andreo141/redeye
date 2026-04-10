@@ -26,7 +26,7 @@
 const alerts = ref([])
 
 const fetchAlerts = async () => {
-  const { data } = await useFetch('http://backend:3001/api/alerts')
+  const { data } = await useFetch('/api/alerts')
   alerts.value = data.value ?? []
 }
 
