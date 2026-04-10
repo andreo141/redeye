@@ -21,6 +21,9 @@ const app = new Elysia()
     return { ok: true };
   })
 
-  .listen(process.env.API_PORT ?? 3001);
+  .listen({
+    port: process.env.API_PORT ?? 3001,
+    hostname: "0.0.0.0",
+  });
 
 console.log(`API server running on port ${process.env.API_PORT ?? 3001}`);
