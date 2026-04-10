@@ -3,4 +3,4 @@ WORKDIR /app
 COPY package.json ./
 RUN bun install
 COPY . .
-CMD ["bun", "run", "sendMessage.js"]
+CMD ["bun", "run", "server.js"]
