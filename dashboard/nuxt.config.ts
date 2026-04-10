@@ -10,6 +10,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
+    "/api/**": { proxy: "http://backend:3001" },
   },
 
   compatibilityDate: "2025-01-15",
@@ -23,15 +24,6 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: "/api",
-    },
-  },
-
-  devServer: {
-    proxy: {
-      "/api": {
-        target: process.env.API_PROXY_TARGET || "http://backend:3001",
-        changeOrigin: true,
-      },
     },
   },
 });
