@@ -6,9 +6,9 @@ let cameraUrl = null;
 
 const app = new Elysia()
 
-  .get("/alerts", () => getAlerts())
+  .get("/api/alerts", () => getAlerts())
 
-  .post("/camera/register", ({ body }) => {
+  .post("/api/camera/register", ({ body }) => {
     const ip = body?.ip;
 
     if (!ip) {
