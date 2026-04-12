@@ -1,10 +1,7 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "@nuxt/ui"],
 
-  devtools: {
-    enabled: true,
-  },
+  devtools: { enabled: true },
 
   css: ["~/assets/css/main.css"],
 
@@ -12,11 +9,23 @@ export default defineNuxtConfig({
     "/": { prerender: true },
   },
 
+  $development: {
+    routeRules: {
+      "/api/**": { proxy: "http://192.168.0.148:3001/api/**" },
+    },
+  },
+
   compatibilityDate: "2025-01-15",
 
   eslint: {
     config: {
       stylistic: false,
+    },
+  },
+
+  runtimeConfig: {
+    public: {
+      apiBase: "/api",
     },
   },
 });

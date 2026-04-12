@@ -3,17 +3,13 @@
     <aside class="sidebar">
       <div class="logo">
         <div class="logo-dot" />
-        <span class="logo-text">RedEye</span>
+        <span class="logo-text"><NuxtLink to="/">RedEye</NuxtLink></span>
       </div>
 
       <nav class="nav">
         <span class="nav-label">Monitor</span>
 
-        <NuxtLink
-          to="/dashboard/overview"
-          class="nav-item"
-          active-class="active"
-        >
+        <NuxtLink to="/overview" class="nav-item" active-class="active">
           <svg
             class="nav-icon"
             viewBox="0 0 16 16"
@@ -29,7 +25,7 @@
           Overview
         </NuxtLink>
 
-        <NuxtLink to="/dashboard/alerts" class="nav-item" active-class="active">
+        <NuxtLink to="/alerts" class="nav-item" active-class="active">
           <svg
             class="nav-icon"
             viewBox="0 0 16 16"
@@ -45,11 +41,7 @@
 
         <span class="nav-label" style="margin-top: 8px">Manage</span>
 
-        <NuxtLink
-          to="/dashboard/calendar"
-          class="nav-item"
-          active-class="active"
-        >
+        <NuxtLink to="/calendar" class="nav-item" active-class="active">
           <svg
             class="nav-icon"
             viewBox="0 0 16 16"
@@ -63,11 +55,7 @@
           Calendar
         </NuxtLink>
 
-        <NuxtLink
-          to="/dashboard/sensors"
-          class="nav-item"
-          active-class="active"
-        >
+        <NuxtLink to="/sensors" class="nav-item" active-class="active">
           <svg
             class="nav-icon"
             viewBox="0 0 16 16"

@@ -2,6 +2,7 @@
   "name": "redeye-backend",
   "module": "sendMessage.js",
   "dependencies": {
+    "@elysiajs/cors": "^1.4.1",
     "mqtt": "^5.0.0"
   }
 }
