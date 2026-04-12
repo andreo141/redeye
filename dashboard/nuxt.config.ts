@@ -27,3 +27,4 @@ export default defineNuxtConfig({
     },
   },
 });
+console.log("API_PROXY_TARGET:", process.env.API_PROXY_TARGET);
