@@ -106,13 +106,13 @@ import { useRoute } from "vue-router";
 const route = useRoute();
 
 const titles: Record<string, string> = {
-  "/dashboard/overview": "Overview",
-  "/dashboard/alerts": "Alert history",
-  "/dashboard/calendar": "Calendar",
-  "/dashboard/sensors": "Sensors",
+  "/overview": "Overview",
+  "/alerts": "Alert history",
+  "/calendar": "Calendar",
+  "/sensors": "Sensors",
 };
 
-const title = computed(() => titles[route.path] ?? "RedEye");
+const title = computed(() => titles[route.path]);
 </script>
 
 <style scoped>
