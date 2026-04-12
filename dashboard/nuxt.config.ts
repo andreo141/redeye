@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true },
-    "/api/**": { proxy: process.env.API_PROXY_TARGET },
+    "/api/**": { proxy: `${process.env.API_PROXY_TARGET}/**` },
   },
 
   compatibilityDate: "2025-01-15",
