@@ -25,12 +25,12 @@
 <script setup lang="ts">
 const alerts = ref([])
 
-const fetchAlerts = async () => {
-  const { data } = await useFetch('/api/alerts')
-  alerts.value = data.value ?? []
-}
+const { data } = await useFetch('/api/alerts')
+alerts.value = data.value ?? []
 
-await fetchAlerts()
+const fetchAlerts = async () => {
+  alerts.value = await $fetch('/api/alerts')
+}
 
 onMounted(() => {
   const interval = setInterval(fetchAlerts, 30_000)
