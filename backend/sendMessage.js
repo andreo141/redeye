@@ -2,6 +2,7 @@ import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
 import { storeAlert } from "./data/db.js";
 import { getCameraUrl } from "./server.js";
+import { logger } from "./logger.js";
 
 const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -10,7 +11,7 @@ const MQTT_TOPIC = process.env.MQTT_TOPIC ?? "zigbee2mqtt/motion-sensor-1";
 const CAMERA_TIMEOUT = 10000;
 
 if (!token || !chatId) {
-  console.error("FATAL: TELEGRAM_TOKEN and TELEGRAM_CHAT_ID must be set.");
+  logger.error("FATAL: TELEGRAM_TOKEN and TELEGRAM_CHAT_ID must be set.");
   process.exit(1);
 }
 
@@ -20,24 +21,24 @@ process.on("SIGTERM", () => mqttClient.end());
 process.on("SIGINT", () => mqttClient.end());
 
 mqttClient.on("connect", () => {
-  console.log("Connected to MQTT broker");
+  logger.info("Connected to MQTT broker");
 
   mqttClient.subscribe(MQTT_TOPIC, (err) => {
-    if (err) console.error(`Failed to subscribe to ${MQTT_TOPIC}:`, err);
-    else console.log(`Subscribed to MQTT topic: ${MQTT_TOPIC}`);
+    if (err) logger.error({ err }, `Failed to subscribe to ${MQTT_TOPIC}:`);
+    else logger.info(`Subscribed to MQTT topic: ${MQTT_TOPIC}`);
   });
 });
 
 mqttClient.on("close", () => {
-  console.log("Disconnected from MQTT broker");
+  logger.info("Disconnected from MQTT broker");
 });
 
 mqttClient.on("error", (error) => {
-  console.error(`MQTT Error: ${error}`);
+  logger.error({ err: error }, `MQTT Error: ${error}`);
 });
 
 mqttClient.on("reconnect", () => {
-  console.log("Reconnecting to MQTT broker...");
+  logger.info("Reconnecting to MQTT broker...");
 });
 
 mqttClient.on("message", async (topic, payload) => {
@@ -46,7 +47,7 @@ mqttClient.on("message", async (topic, payload) => {
   try {
     data = JSON.parse(payload.toString());
   } catch {
-    console.error("Failed to parse MQTT payload:", payload.toString());
+    logger.error("Failed to parse MQTT payload:", payload.toString());
     return;
   }
 
@@ -68,7 +69,7 @@ mqttClient.on("message", async (topic, payload) => {
     }
     storeAlert(topic, "Bergkot", photo ? "snapshot.jpg" : null);
   } catch (err) {
-    console.error("Error while sending Telegram message:", err);
+    logger.error({ err }, "Error while sending Telegram message:");
   }
 });
 
@@ -76,7 +77,7 @@ async function getSnapshot() {
   const cameraUrl = getCameraUrl();
 
   if (!cameraUrl) {
-    console.error("No camera URL available.");
+    logger.error("No camera URL available.");
     return null;
   }
 
@@ -91,16 +92,16 @@ async function getSnapshot() {
     return new Blob([await res.bytes()], { type: "image/jpeg" });
   } catch (err) {
     if (err.name === "TimeoutError") {
-      console.error("Snapshot fetch timed out.");
+      logger.error("Snapshot fetch timed out.");
     } else {
-      console.error("Error while trying to fetch snapshot.", err);
+      logger.error("Error while trying to fetch snapshot.", err);
     }
     return null;
   } finally {
     try {
       await fetch(`${cameraUrl}/control?var=led_intensity&val=0`);
-    } catch {
-      console.error("Failed to turn off flash.");
+    } catch (err) {
+      logger.error({ err }, "Failed to turn off flash.");
     }
   }
 }

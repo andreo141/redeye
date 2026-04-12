@@ -1,5 +1,6 @@
 import { Elysia } from "elysia";
 import { getAlerts } from "./data/db.js";
+import { logger } from "./logger.js";
 
 export const getCameraUrl = () => cameraUrl;
 let cameraUrl = null;
@@ -16,7 +17,7 @@ const app = new Elysia()
     }
 
     cameraUrl = `http://${ip}`;
-    console.log(`Camera registered at ${cameraUrl}`);
+    logger.info(`Camera registered at ${cameraUrl}`);
 
     return { ok: true };
   })
@@ -26,4 +27,4 @@ const app = new Elysia()
     hostname: "0.0.0.0",
   });
 
-console.log(`API server running on port ${process.env.API_PORT ?? 3001}`);
+logger.info(`API server running on port ${process.env.API_PORT ?? 3001}`);
