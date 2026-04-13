@@ -15,6 +15,12 @@ export default defineNuxtConfig({
     },
   },
 
+  $production: {
+    routeRules: {
+      "/api/**": { proxy: "http://backend:3001/api/**" },
+    },
+  },
+
   compatibilityDate: "2025-01-15",
 
   eslint: {
