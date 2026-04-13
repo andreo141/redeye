@@ -307,6 +307,13 @@ const title = computed(() => titles[route.path]);
   animation: pulse 2s ease-in-out infinite;
 }
 
+.overview-card {
+  background: #0f0f0f;
+  border: 1px solid #1a1a1a;
+  border-radius: 8px;
+  padding: 16px;
+}
+
 @keyframes pulse {
   0%,
   100% {
