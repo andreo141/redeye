@@ -11,13 +11,13 @@ export default defineNuxtConfig({
 
   $development: {
     routeRules: {
-      "/api/**": { proxy: "http://192.168.0.148:3001/api/**" },
+      "/api/**": { proxy: `${process.env.API_PROXY_TARGET}/api/**` },
     },
   },
 
   $production: {
     routeRules: {
-      "/api/**": { proxy: "http://backend:3001/api/**" },
+      "/api/**": { proxy: `${process.env.API_PROXY_TARGET}/api/**` },
     },
   },
 
