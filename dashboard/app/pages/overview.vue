@@ -23,6 +23,30 @@
         variant="soft"
       >
         <h1>Recent Alerts</h1>
+        <br />
+        <div v-if="alerts.length === 0">No alerts yet</div>
+        <div v-else class="recent-alerts-list">
+          <div
+            v-for="alert in alerts.slice(0, 3)"
+            :key="alert.id"
+            class="recent-alert-item"
+          >
+            <div>
+              {{ formatSensorName(alert.sensor) }} at
+              {{ alert.location }}
+            </div>
+            <div class="recent-alert-time">
+              {{
+                new Date(alert.created_at + 'Z').toLocaleString('en-GB', {
+                  timeZone: 'Europe/Brussels',
+                  weekday: 'short',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              }}
+            </div>
+          </div>
+        </div>
       </UCard>
     </UContainer>
   </main>
@@ -36,6 +60,8 @@ type Alert = {
   photo_url?: string | null
   created_at: string
 }
+
+const { formatSensorName } = useSensor()
 
 const alerts = ref<Alert[]>([])
 const now = ref(Date.now())
@@ -109,8 +135,8 @@ onUnmounted(() => {
 
 <style scoped>
 .overview-container {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
@@ -128,12 +154,24 @@ onUnmounted(() => {
 
 #overview-last-motion-card,
 #overview-alerts-today-card {
-  flex: 1;
-  flex-basis: 300px;
+  grid-column: span 1;
 }
 
 #overview-recent-alerts-card {
-  flex: 2;
-  flex-basis: 1000px;
+  grid-column: span 2;
+}
+
+.recent-alert-item {
+  padding-bottom: 3rem;
+}
+
+@media (max-width: 768px) {
+  .overview-container {
+    grid-template-columns: 1fr;
+  }
+
+  #overview-recent-alerts-card {
+    grid-column: span 1;
+  }
 }
 </style>
