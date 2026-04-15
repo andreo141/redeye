@@ -27,7 +27,7 @@
         <div v-if="alerts.length === 0">No alerts yet</div>
         <div v-else class="recent-alerts-list">
           <div
-            v-for="alert in alerts.slice(0, 3)"
+            v-for="alert in alerts.slice(0, 5)"
             :key="alert.id"
             class="recent-alert-item"
           >
@@ -42,6 +42,7 @@
                   weekday: 'short',
                   hour: '2-digit',
                   minute: '2-digit',
+                  second: '2-digit',
                 })
               }}
             </div>
@@ -162,7 +163,20 @@ onUnmounted(() => {
 }
 
 .recent-alert-item {
-  padding-bottom: 3rem;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+.recent-alert-item div:nth-last-child(1) {
+  padding-bottom: 0;
+  font-size: small;
+  color: #c5bfbf;
+}
+
+.recent-alert-item:not(:last-child) {
+  border-bottom: 1px solid #333;
 }
 
 @media (max-width: 768px) {
