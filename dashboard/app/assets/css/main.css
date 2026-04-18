@@ -2,17 +2,71 @@
 @import "@nuxt/ui";
 
 @theme static {
-  --font-sans: 'Public Sans', sans-serif;
+  --font-sans: "Public Sans", sans-serif;
 
-  --color-green-50: #EFFDF5;
-  --color-green-100: #D9FBE8;
-  --color-green-200: #B3F5D1;
-  --color-green-300: #75EDAE;
-  --color-green-400: #00DC82;
-  --color-green-500: #00C16A;
-  --color-green-600: #00A155;
-  --color-green-700: #007F45;
+  --color-green-50: #effdf5;
+  --color-green-100: #d9fbe8;
+  --color-green-200: #b3f5d1;
+  --color-green-300: #75edae;
+  --color-green-400: #00dc82;
+  --color-green-500: #00c16a;
+  --color-green-600: #00a155;
+  --color-green-700: #007f45;
   --color-green-800: #016538;
-  --color-green-900: #0A5331;
-  --color-green-950: #052E16;
+  --color-green-900: #0a5331;
+  --color-green-950: #052e16;
+}
+
+.alert-item {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 1rem;
+  padding-top: 1rem;
+}
+
+.alert-item div:nth-last-child(1) {
+  padding-bottom: 0;
+  font-size: small;
+  color: #c5bfbf;
+}
+
+.alert-item:not(:last-child) {
+  border-bottom: 1px solid #333;
+}
+
+.overview-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.overview-card {
+  background: #0f0f0f;
+}
+
+.overview-card-value {
+  font-size: 24px;
+  font-weight: 300;
+  color: #f0f0f0;
+  font-family: "DM Mono", monospace;
+  letter-spacing: -0.02em;
+}
+
+#overview-last-motion-card,
+#overview-alerts-today-card {
+  grid-column: span 1;
+}
+
+#overview-recent-alerts-card {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .overview-container {
+    grid-template-columns: 1fr;
+  }
+
+  #overview-recent-alerts-card {
+    grid-column: span 1;
+  }
 }

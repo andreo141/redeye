@@ -25,45 +25,17 @@
         <h1>Recent Alerts</h1>
         <br />
         <div v-if="alerts.length === 0">No alerts yet</div>
-        <div v-else class="recent-alerts-list">
-          <div
-            v-for="alert in alerts.slice(0, 5)"
-            :key="alert.id"
-            class="recent-alert-item"
-          >
-            <div>
-              {{ formatSensorName(alert.sensor) }} at
-              {{ alert.location }}
-            </div>
-            <div class="recent-alert-time">
-              {{
-                new Date(alert.created_at + 'Z').toLocaleString('en-GB', {
-                  timeZone: 'Europe/Brussels',
-                  weekday: 'short',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  second: '2-digit',
-                })
-              }}
-            </div>
-          </div>
-        </div>
+        <AlertItem
+          v-for="alert in alerts.slice(0, 5)"
+          :key="alert.id"
+          :alert="alert"
+        />
       </UCard>
     </UContainer>
   </main>
 </template>
 
 <script setup lang="ts">
-type Alert = {
-  id: number
-  sensor: string
-  location: string
-  photo_url?: string | null
-  created_at: string
-}
-
-const { formatSensorName } = useSensor()
-
 const alerts = ref<Alert[]>([])
 const now = ref(Date.now())
 
@@ -134,58 +106,4 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped>
-.overview-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.overview-card {
-  background: #0f0f0f;
-}
-
-.overview-card-value {
-  font-size: 24px;
-  font-weight: 300;
-  color: #f0f0f0;
-  font-family: 'DM Mono', monospace;
-  letter-spacing: -0.02em;
-}
-
-#overview-last-motion-card,
-#overview-alerts-today-card {
-  grid-column: span 1;
-}
-
-#overview-recent-alerts-card {
-  grid-column: span 2;
-}
-
-.recent-alert-item {
-  display: flex;
-  flex-direction: column;
-  padding-bottom: 1rem;
-  padding-top: 1rem;
-}
-
-.recent-alert-item div:nth-last-child(1) {
-  padding-bottom: 0;
-  font-size: small;
-  color: #c5bfbf;
-}
-
-.recent-alert-item:not(:last-child) {
-  border-bottom: 1px solid #333;
-}
-
-@media (max-width: 768px) {
-  .overview-container {
-    grid-template-columns: 1fr;
-  }
-
-  #overview-recent-alerts-card {
-    grid-column: span 1;
-  }
-}
-</style>
+<style scoped></style>
