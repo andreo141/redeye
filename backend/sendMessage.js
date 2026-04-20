@@ -52,6 +52,7 @@ mqttClient.on("message", async (topic, payload) => {
   }
 
   if (data.occupancy !== true) return;
+
   if (isCoolingDown()) return;
 
   const detectionTime = new Date().toLocaleTimeString("nl-BE", {
@@ -82,7 +83,6 @@ async function getSnapshot() {
   }
 
   try {
-    await fetch(`${cameraUrl}/control?var=led_intensity&val=255`);
     const res = await fetch(`${cameraUrl}/capture`, {
       signal: AbortSignal.timeout(CAMERA_TIMEOUT),
     });
@@ -97,12 +97,6 @@ async function getSnapshot() {
       logger.error("Error while trying to fetch snapshot.", err);
     }
     return null;
-  } finally {
-    try {
-      await fetch(`${cameraUrl}/control?var=led_intensity&val=0`);
-    } catch (err) {
-      logger.error({ err }, "Failed to turn off flash.");
-    }
   }
 }
 
