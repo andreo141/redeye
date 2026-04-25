@@ -12,6 +12,16 @@
         })
       }}
     </div>
+    <div>
+      <p>{{ alert.photo_url }}</p>
+      <img
+        v-if="alert.photo_url"
+        :src="alert.photo_url"
+        alt="Alert photo"
+        class="alert-photo"
+      />
+      <div v-else class="alert-no-photo">No photo</div>
+    </div>
   </div>
 </template>
 
@@ -28,3 +38,15 @@ defineProps<{ alert: Alert }>();
 
 const { formatSensorName } = useSensor();
 </script>
+
+<style scoped>
+.alert-photo {
+  max-width: 100%;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+.alert-no-photo {
+  color: #666;
+  font-style: italic;
+}
+</style>
