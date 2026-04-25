@@ -63,12 +63,14 @@ mqttClient.on("message", async (topic, payload) => {
 
   try {
     const sentMessageId = await sendTextMessage(message);
-
     const photo = await getSnapshot();
+    const filename = photo ? await saveSnapshot(photo) : null;
+
     if (photo) {
-      await sendPhoto(photo, sentMessageId);
+      await sendPhoto(filename, sentMessageId);
+      logger.info({ filename, sentMessageId }, "Alert sent with photo");
+      storeAlert(topic, "Bergkot", filename);
     }
-    storeAlert(topic, "Bergkot", photo ? "snapshot.jpg" : null);
   } catch (err) {
     logger.error({ err }, "Error while sending Telegram message:");
   }
@@ -94,10 +96,16 @@ async function getSnapshot() {
     if (err.name === "TimeoutError") {
       logger.error("Snapshot fetch timed out.");
     } else {
-      logger.error("Error while trying to fetch snapshot.", err);
+      logger.error({ err }, "Error while trying to fetch snapshot.");
     }
     return null;
   }
+}
+
+async function saveSnapshot(imageBlob) {
+  const filename = `${Date.now()}_${MQTT_TOPIC.replace(/\//g, "_")}.jpg`;
+  await Bun.write(`./photos/${filename}`, imageBlob);
+  return filename;
 }
 
 async function sendTextMessage(message) {
@@ -118,10 +126,10 @@ async function sendTextMessage(message) {
   return data.result.message_id;
 }
 
-async function sendPhoto(photo, replyToMessageId) {
+async function sendPhoto(filename, replyToMessageId) {
   const form = new FormData();
   form.append("chat_id", chatId);
-  form.append("photo", photo);
+  form.append("photo", Bun.file(`./photos/${filename}`));
 
   if (replyToMessageId)
     form.append("reply_to_message_id", String(replyToMessageId));
