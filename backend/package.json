@@ -3,6 +3,7 @@
   "module": "sendMessage.js",
   "dependencies": {
     "@elysiajs/cors": "^1.4.1",
+    "@elysiajs/static": "^1.4.10",
     "mqtt": "^5.0.0"
   }
 }

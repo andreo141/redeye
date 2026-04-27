@@ -1,11 +1,16 @@
 import { Elysia } from "elysia";
 import { getAlerts } from "./data/db.js";
 import { logger } from "./logger.js";
+import { staticPlugin } from '@elysia/static'
 
 export const getCameraUrl = () => cameraUrl;
 let cameraUrl = null;
 
 const app = new Elysia()
+  .use(staticPlugin({
+    assets: './photos',
+    prefix: '/photos'
+  }))
 
   .get("/api/alerts", () => getAlerts())
 
