@@ -1,7 +1,7 @@
 import { Elysia } from "elysia";
 import { getAlerts } from "./data/db.js";
 import { logger } from "./logger.js";
-import { staticPlugin } from '@elysia/static'
+import { staticPlugin } from '@elysiajs/static'
 
 export const getCameraUrl = () => cameraUrl;
 let cameraUrl = null;
