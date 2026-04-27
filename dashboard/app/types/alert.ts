@@ -1,4 +1,4 @@
-type Alert = {
+export type Alert = {
   id: number;
   sensor: string;
   location: string;

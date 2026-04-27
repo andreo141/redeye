@@ -16,7 +16,7 @@
       <p>{{ alert.photo_url }}</p>
       <img
         v-if="alert.photo_url"
-        :src="alert.photo_url"
+        :src="`/api/photos/${alert.photo_url}`"
         alt="Alert photo"
         class="alert-photo"
       />
@@ -26,13 +26,7 @@
 </template>
 
 <script setup lang="ts">
-type Alert = {
-  id: number;
-  sensor: string;
-  location: string;
-  photo_url?: string | null;
-  created_at: string;
-};
+import type { Alert } from "~/types/alert";
 
 defineProps<{ alert: Alert }>();
 
