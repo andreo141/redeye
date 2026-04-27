@@ -66,12 +66,11 @@ mqttClient.on("message", async (topic, payload) => {
     const photo = await getSnapshot();
     const filename = photo ? await saveSnapshot(photo) : null;
 
-    if (photo) {
-      await sendPhoto(filename, sentMessageId);
-      logger.info({ filename, sentMessageId }, "Alert sent with photo");
-      storeAlert(topic, "Bergkot", filename);
-    }
-  } catch (err) {
+    if (photo && filename) await sendPhoto(filename, sentMessageId)
+
+    storeAlert(topic, "Bergkot", filename);
+    logger.info({ filename, sentMessageId }, "Alert sent with photo");
+    } catch (err) {
     logger.error({ err }, "Error while sending Telegram message:");
   }
 });
