@@ -110,11 +110,13 @@ import { useRoute } from "vue-router";
 import type { CameraStatus } from "~/types/cameraStatus";
 
 const route = useRoute();
+let statusInterval: ReturnType<typeof setInterval>;
 
-const { data: cameraStatus } =
+const { data: cameraStatus, refresh: refreshCameraStatus } =
   await useFetch<CameraStatus>("/api/camera/status");
 
 const cameraEnabled = computed(() => cameraStatus.value?.online ?? false);
+
 const title = computed(() => titles[route.path]);
 
 const titles: Record<string, string> = {
@@ -123,6 +125,12 @@ const titles: Record<string, string> = {
   "/calendar": "Calendar",
   "/sensors": "Sensors",
 };
+
+onMounted(() => {
+  statusInterval = setInterval(refreshCameraStatus, 10_000);
+});
+
+onUnmounted(() => clearInterval(statusInterval));
 </script>
 
 <style scoped>
