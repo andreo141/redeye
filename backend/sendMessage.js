@@ -103,7 +103,11 @@ async function getSnapshot() {
 
 async function saveSnapshot(imageBlob) {
   const filename = `${Date.now()}_${MQTT_TOPIC.replace(/\//g, "_")}.jpg`;
-  await Bun.write(`./photos/${filename}`, imageBlob);
+  try {
+    await Bun.write(`./photos/${filename}`, imageBlob);
+  } catch (err) {
+    logger.error({ err }, "Failed to save snapshot:");
+  }
   return filename;
 }
 

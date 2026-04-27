@@ -85,9 +85,14 @@
       <div class="topbar">
         <span class="page-title">{{ title }}</span>
         <div class="topbar-right">
-          <div class="status-pill">
-            <div class="status-dot" />
-            2 sensors online
+          <div v-if="cameraEnabled" class="status-pill-online">
+            <div class="status-dot-online" />
+            Camera online
+          </div>
+
+          <div v-else class="status-pill-offline">
+            <div class="status-dot-offline" />
+            Camera offline
           </div>
         </div>
       </div>
@@ -102,8 +107,15 @@
 <script setup lang="ts">
 import { computed } from "vue";
 import { useRoute } from "vue-router";
+import type { CameraStatus } from "~/types/cameraStatus";
 
 const route = useRoute();
+
+const { data: cameraStatus } =
+  await useFetch<CameraStatus>("/api/camera/status");
+
+const cameraEnabled = computed(() => cameraStatus.value?.online ?? false);
+const title = computed(() => titles[route.path]);
 
 const titles: Record<string, string> = {
   "/overview": "Overview",
@@ -111,8 +123,6 @@ const titles: Record<string, string> = {
   "/calendar": "Calendar",
   "/sensors": "Sensors",
 };
-
-const title = computed(() => titles[route.path]);
 </script>
 
 <style scoped>
@@ -286,7 +296,7 @@ const title = computed(() => titles[route.path]);
   gap: 12px;
 }
 
-.status-pill {
+.status-pill-online {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -299,12 +309,32 @@ const title = computed(() => titles[route.path]);
   font-family: "DM Mono", monospace;
 }
 
-.status-dot {
+.status-dot-online {
   width: 6px;
   height: 6px;
   background: #4a9e4a;
   border-radius: 50%;
   animation: pulse 2s ease-in-out infinite;
+}
+
+.status-pill-offline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1a0d0d;
+  border: 1px solid #2e1a1a;
+  border-radius: 20px;
+  padding: 4px 10px;
+  font-size: 11px;
+  color: #9e4a4a;
+  font-family: "DM Mono", monospace;
+}
+
+.status-dot-offline {
+  width: 6px;
+  height: 6px;
+  background: #9e4a4a;
+  border-radius: 50%;
 }
 
 .overview-card {

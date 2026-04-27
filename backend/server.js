@@ -5,6 +5,7 @@ import { staticPlugin } from '@elysia/static'
 
 export const getCameraUrl = () => cameraUrl;
 let cameraUrl = null;
+let cameraEnabled = false;
 
 const app = new Elysia()
   .use(staticPlugin({
@@ -23,9 +24,15 @@ const app = new Elysia()
 
     cameraUrl = `http://${ip}`;
     logger.info(`Camera registered at ${cameraUrl}`);
+    cameraEnabled = true;
 
     return { ok: true };
   })
+
+  .get("/api/camera/status", () => ({
+    online: cameraEnabled,
+    url: cameraUrl,
+  }))
 
   .listen({
     port: process.env.API_PORT ?? 3001,
