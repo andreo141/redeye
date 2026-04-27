@@ -154,14 +154,14 @@ void setup() {
   Serial.println("' to connect");
 
   HTTPClient http;
-  http.begin("http://192.168.0.148:3001/api/camera/register");
+  http.begin("http://192.168.0.148:3001/api/camera/heartbeat");
   http.addHeader("Content-Type", "application/json");
-
+  
   String body = "{\"ip\":\"" + WiFi.localIP().toString() + "\"}";
   http.POST(body);
   http.end();
-
-
+  
+  delay(30000);
 }
 
 void loop() {
