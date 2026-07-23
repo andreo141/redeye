@@ -13,7 +13,6 @@
       }}
     </div>
     <div>
-      <p>{{ alert.photo_url }}</p>
       <img
         v-if="alert.photo_url"
         :src="`/api/photos/${alert.photo_url}`"
