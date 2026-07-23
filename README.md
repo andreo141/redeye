@@ -1,5 +1,5 @@
 ### Overview:
-<img width="1470" height="835" alt="image" src="https://github.com/user-attachments/assets/8a9b521e-4cf3-41d6-9209-7f4c4acfbd4f" />
+<img width="1459" height="836" alt="image" src="https://github.com/user-attachments/assets/aba1a948-ef8c-4a99-a61c-028dc26cf859" />
 
 ### Recent Alerts:
 <img width="1470" height="746" alt="image" src="https://github.com/user-attachments/assets/b370f1c0-a92c-4bf9-aed4-e0af3c1827ea" />
