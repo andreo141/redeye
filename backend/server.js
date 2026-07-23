@@ -12,7 +12,7 @@ const app = new Elysia()
   .use(
     staticPlugin({
       assets: "./photos",
-      prefix: "/photos",
+      prefix: "/api/photos",
     }),
   )
 
