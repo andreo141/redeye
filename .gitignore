@@ -1,3 +1,5 @@
 zigbee2mqtt/data/*
 !zigbee2mqtt/data/configuration.yaml
 .DS_Store
+/backend/data/redeye.db
+/backend/photos/
