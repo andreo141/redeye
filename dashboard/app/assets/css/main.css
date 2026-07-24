@@ -70,3 +70,10 @@
     grid-column: span 1;
   }
 }
+
+.alert-photo {
+  width: 160px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+}
