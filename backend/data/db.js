@@ -1,6 +1,6 @@
 import { Database } from "bun:sqlite";
 
-const db = Database.open("./redeye.db");
+const db = Database.open("./data/redeye.db");
 
 db.run(`
   CREATE TABLE IF NOT EXISTS alerts (
