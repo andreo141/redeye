@@ -6,8 +6,6 @@
         class="overview-card"
         variant="soft"
       >
-        <h1>Recent Alerts</h1>
-        <br />
         <div v-if="alerts.length === 0">No alerts yet</div>
         <AlertItem v-for="alert in alerts" :key="alert.id" :alert="alert" />
       </UCard>
