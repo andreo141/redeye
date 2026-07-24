@@ -3,6 +3,7 @@ mqtt:
 version: 5
 frontend:
   enabled: true
+permit_join: false
 devices:
   '0x983268fffe00b71e':
     friendly_name: motion-sensor-1
