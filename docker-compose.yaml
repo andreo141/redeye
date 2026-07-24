@@ -34,6 +34,9 @@ services:
       - ./backend/.env
     ports:
       - 3001:3001
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/photos:/app/photos
 
   mosquitto:
     container_name: redeye-mosquitto
@@ -43,5 +46,3 @@ services:
       - 1883:1883
     volumes:
       - ./mosquitto/config:/mosquitto/config
-      - ./backend/data/redeye.db:/app/redeye.db
-      - ./backend/photos:/app/photos
