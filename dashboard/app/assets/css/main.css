@@ -77,3 +77,21 @@
   object-fit: cover;
   border-radius: 4px;
 }
+
+.rssi-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: #5a5a5a;
+  font-family: "DM Mono", monospace;
+}
+.rssi-good {
+  color: #4a9e4a;
+}
+.rssi-weak {
+  color: #baa020;
+}
+.rssi-critical {
+  color: #e53e3e;
+}

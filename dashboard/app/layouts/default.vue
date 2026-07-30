@@ -89,11 +89,20 @@
             <div class="status-dot-online" />
             Camera online
           </div>
-
           <div v-else class="status-pill-offline">
             <div class="status-dot-offline" />
             Camera offline
           </div>
+        </div>
+
+        <div
+          v-if="cameraEnabled && lastRssi !== null"
+          class="rssi-info"
+          :class="`rssi-${rssiStatus}`"
+        >
+          RSSI: {{ lastRssi }} dBm
+          <span v-if="rssiStatus === 'weak'">: weak signal</span>
+          <span v-if="rssiStatus === 'critical'">: very weak signal</span>
         </div>
       </div>
 
@@ -116,6 +125,15 @@ const { data: cameraStatus, refresh: refreshCameraStatus } =
   await useFetch<CameraStatus>("/api/camera/status");
 
 const cameraEnabled = computed(() => cameraStatus.value?.online ?? false);
+
+const lastRssi = computed(() => cameraStatus.value?.lastRssi ?? null);
+const rssiStatus = computed(() => {
+  const rssi = cameraStatus.value?.lastRssi;
+  if (rssi === null || rssi === undefined) return "unknown";
+  if (rssi >= -70) return "good";
+  if (rssi >= -80) return "weak";
+  return "critical";
+});
 
 const title = computed(() => titles[route.path]);
 
