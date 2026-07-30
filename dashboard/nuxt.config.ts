@@ -11,13 +11,29 @@ export default defineNuxtConfig({
 
   $development: {
     routeRules: {
-      "/api/**": { proxy: `${process.env.API_PROXY_TARGET}/api/**` },
+      "/api/alerts/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/alerts/**`,
+      },
+      "/api/camera/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/camera/**`,
+      },
+      "/api/photos/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/photos/**`,
+      },
     },
   },
 
   $production: {
     routeRules: {
-      "/api/**": { proxy: `${process.env.API_PROXY_TARGET}/api/**` },
+      "/api/alerts/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/alerts/**`,
+      },
+      "/api/camera/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/camera/**`,
+      },
+      "/api/photos/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/photos/**`,
+      },
     },
   },
 
