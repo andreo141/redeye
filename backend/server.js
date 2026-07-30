@@ -7,6 +7,7 @@ export const getCameraUrl = () => cameraUrl;
 let cameraUrl = null;
 let cameraEnabled = false;
 let lastHeartbeat = null;
+let lastRssi = null;
 
 const app = new Elysia()
   .use(
@@ -24,6 +25,7 @@ const app = new Elysia()
     cameraUrl = `http://${ip}`;
     cameraEnabled = true;
     lastHeartbeat = Date.now();
+    lastRssi = body?.rssi ?? null;
 
     return { ok: true };
   })
@@ -31,6 +33,7 @@ const app = new Elysia()
     online: cameraEnabled,
     url: cameraUrl,
     lastHeartbeat: lastHeartbeat,
+    lastRssi: lastRssi,
   }))
   .listen({
     port: process.env.API_PORT ?? 3001,
