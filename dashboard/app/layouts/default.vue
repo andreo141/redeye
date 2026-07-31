@@ -52,7 +52,7 @@
             <rect x="1" y="2" width="14" height="12" rx="1.5" />
             <path d="M5 2v12M1 6h14" />
           </svg>
-          Calendar
+          Occupancies
         </NuxtLink>
 
         <NuxtLink to="/sensors" class="nav-item" active-class="active">

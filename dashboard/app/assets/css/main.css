@@ -95,3 +95,31 @@
 .rssi-critical {
   color: #e53e3e;
 }
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  gap: 2rem;
+}
+
+.calendar-table-container {
+  padding-top: 2rem;
+}
+
+.selected-dates-buttongroup {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+}
+
+.calendar-selected-range {
+  font-size: large;
+}
+
+.selected-dates-text {
+  padding-right: 0.5rem;
+}
