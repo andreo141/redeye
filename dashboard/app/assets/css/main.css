@@ -121,5 +121,14 @@
 }
 
 .selected-dates-text {
-  padding-right: 0.5rem;
+  padding-right: 2px;
+}
+
+.delete-occupancy-button {
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+tr:hover .delete-occupancy-button {
+  opacity: 1;
 }
