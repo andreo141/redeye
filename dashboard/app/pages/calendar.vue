@@ -36,7 +36,5 @@ const value = shallowRef({
   end: undefined,
 })
 
-}
-
 const occupancies = ref([])
 </script>
