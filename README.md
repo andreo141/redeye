@@ -1,8 +1,8 @@
 ### Overview:
-<img width="1470" height="805" alt="image" src="https://github.com/user-attachments/assets/1a6e261e-ca2a-4d1e-9c53-69fb5ccfa282" />
+<img width="1470" height="813" alt="image" src="https://github.com/user-attachments/assets/a07d4c97-5f5a-44ad-ac5d-1ada0d43debd" />
 
 ### Recent Alerts:
-<img width="1470" height="808" alt="image" src="https://github.com/user-attachments/assets/70e561eb-daa9-40e7-950e-efe85fb8f92b" />
+<img width="1470" height="809" alt="image" src="https://github.com/user-attachments/assets/97e05f4b-1abe-4c97-be3c-679d56f5ecbf" />
 
 ### Occupancies
 <img width="1470" height="812" alt="image" src="https://github.com/user-attachments/assets/d59d5ed2-a41e-4abb-b1a3-629a92f41c31" />
