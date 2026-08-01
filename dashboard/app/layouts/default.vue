@@ -41,7 +41,7 @@
 
         <span class="nav-label" style="margin-top: 8px">Manage</span>
 
-        <NuxtLink to="/calendar" class="nav-item" active-class="active">
+        <NuxtLink to="/occupancies" class="nav-item" active-class="active">
           <svg
             class="nav-icon"
             viewBox="0 0 16 16"
@@ -140,7 +140,7 @@ const title = computed(() => titles[route.path]);
 const titles: Record<string, string> = {
   "/overview": "Overview",
   "/alerts": "Alert history",
-  "/calendar": "Calendar",
+  "/occupancies": "Occupancies",
   "/sensors": "Sensors",
 };
 
