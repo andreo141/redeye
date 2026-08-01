@@ -10,7 +10,7 @@ Select period when property will be  occupied
 <img width="926" height="427" alt="image" src="https://github.com/user-attachments/assets/ad5f64f0-89e4-47f2-b5b8-4690d26044e9" />
 
 #### Occupancy table populated
-<img width="1470" height="812" alt="image" src="https://github.com/user-attachments/assets/d59d5ed2-a41e-4abb-b1a3-629a92f41c31" />
+<img width="1246" height="752" alt="image" src="https://github.com/user-attachments/assets/571867b9-0840-4346-b8a5-187b322828fa" />
 Redeye will not be functional during these periods
 
 ### Sensors (coming soon)
