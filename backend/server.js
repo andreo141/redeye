@@ -1,5 +1,5 @@
-import { Elysia } from "elysia";
-import { getAlerts } from "./data/db.js";
+import { Elysia, t } from "elysia";
+import { getAlerts, getOccupancies, storeOccupancy } from "./data/db.js";
 import { logger } from "./logger.js";
 import { staticPlugin } from "@elysiajs/static";
 
@@ -18,6 +18,27 @@ const app = new Elysia()
   )
 
   .get("/api/alerts", () => getAlerts())
+  .get("/api/occupancies", () => getOccupancies())
+  .post(
+    "/api/occupancies",
+    ({ body }) => {
+      storeOccupancy(
+        body.location,
+        body.occupantName,
+        body.arrivalDate,
+        body.departureDate,
+      );
+      return { ok: true };
+    },
+    {
+      body: t.Object({
+        location: t.String(),
+        occupantName: t.String(),
+        arrivalDate: t.String({ format: "date" }),
+        departureDate: t.String({ format: "date" }),
+      }),
+    },
+  )
   .post("/api/camera/heartbeat", ({ body }) => {
     const ip = body?.ip;
     if (!ip) return { ok: false };

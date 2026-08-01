@@ -21,18 +21,24 @@ db.run(`
     departure_date  TEXT NOT NULL
   )`);
 
+export function getAlerts(limit = 20) {
+  return db
+    .query("SELECT * FROM alerts ORDER BY created_at DESC LIMIT ?")
+    .all(limit);
+}
+
+export function getOccupancies(limit = 20) {
+  return db
+    .query("SELECT * FROM occupancies ORDER BY arrival_date DESC LIMIT ?")
+    .all(limit);
+}
+
 export function storeAlert(sensor, location, photoUrl = null) {
   db.run("INSERT INTO alerts (sensor, location, photo_url) VALUES (?, ?, ?)", [
     sensor,
     location,
     photoUrl,
   ]);
-}
-
-export function getAlerts(limit = 20) {
-  return db
-    .query("SELECT * FROM alerts ORDER BY created_at DESC LIMIT ?")
-    .all(limit);
 }
 
 export function storeOccupancy(
@@ -45,12 +51,6 @@ export function storeOccupancy(
     "INSERT INTO occupancies (location, occupant_name, arrival_date, departure_date) VALUES (?, ?, ?, ?)",
     [location, occupantName, arrivalDate, departureDate],
   );
-}
-
-export function getOccupancies(limit = 20) {
-  return db
-    .query("SELECT * FROM occupancies ORDER BY arrival_date DESC LIMIT ?")
-    .all(limit);
 }
 
 export function isLocationOccupied(location, today) {
