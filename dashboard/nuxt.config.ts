@@ -20,6 +20,9 @@ export default defineNuxtConfig({
       "/api/photos/**": {
         proxy: `${process.env.API_PROXY_TARGET}/api/photos/**`,
       },
+      "/api/occupancies/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/occupancies/**`,
+      },
     },
   },
 
@@ -33,6 +36,9 @@ export default defineNuxtConfig({
       },
       "/api/photos/**": {
         proxy: `${process.env.API_PROXY_TARGET}/api/photos/**`,
+      },
+      "/api/occupancies/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/occupancies/**`,
       },
     },
   },
