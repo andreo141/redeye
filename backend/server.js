@@ -1,5 +1,10 @@
 import { Elysia, t } from "elysia";
-import { getAlerts, getOccupancies, storeOccupancy } from "./data/db.js";
+import {
+  getAlerts,
+  getOccupancies,
+  storeOccupancy,
+  deleteOccupancy,
+} from "./data/db.js";
 import { logger } from "./logger.js";
 import { staticPlugin } from "@elysiajs/static";
 
@@ -39,6 +44,10 @@ const app = new Elysia()
       }),
     },
   )
+  .delete("/api/occupancies/:id", ({ params }) => {
+    deleteOccupancy(params.id);
+    return { ok: true };
+  })
   .post("/api/camera/heartbeat", ({ body }) => {
     const ip = body?.ip;
     if (!ip) return { ok: false };

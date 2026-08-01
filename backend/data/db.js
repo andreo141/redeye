@@ -67,3 +67,7 @@ export function isLocationOccupied(location, today) {
 
   return result.length > 0;
 }
+
+export function deleteOccupancy(id) {
+  db.run("DELETE FROM occupancies WHERE id = ?", [id]);
+}
