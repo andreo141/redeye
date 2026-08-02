@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
-import { storeAlert } from "./data/db.js";
+import { storeAlert, isLocationOccupied } from "./data/db.js";
 import { getCameraUrl } from "./server.js";
 import { logger } from "./logger.js";
 
@@ -58,6 +58,16 @@ mqttClient.on("message", async (topic, payload) => {
   const detectionTime = new Date().toLocaleTimeString("nl-BE", {
     timeZone: "Europe/Brussels",
   });
+
+  const today = new Date().toLocaleDateString("en-CA", {
+    timeZone: "Europe/Brussels",
+  });
+
+  if (isLocationOccupied("Bergkot", today)) {
+    logger.info("Location is currently occupied. Alert not sent.");
+    return;
+  }
+
   // TODO: replace with dynamic sensor location lookup
   const message = `Motion detected in Bergkot at ${detectionTime}!`;
 
@@ -66,11 +76,11 @@ mqttClient.on("message", async (topic, payload) => {
     const photo = await getSnapshot();
     const filename = photo ? await saveSnapshot(photo) : null;
 
-    if (photo && filename) await sendPhoto(filename, sentMessageId)
+    if (photo && filename) await sendPhoto(filename, sentMessageId);
 
     storeAlert(topic, "Bergkot", filename);
     logger.info({ filename, sentMessageId }, "Alert sent with photo");
-    } catch (err) {
+  } catch (err) {
     logger.error({ err }, "Error while sending Telegram message:");
   }
 });
