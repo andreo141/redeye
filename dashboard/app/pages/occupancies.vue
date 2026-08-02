@@ -10,8 +10,8 @@
       <div class="calendar-selected-range">
         <span v-if="selectedRange.start && selectedRange.end">
           <strong class="selected-dates-text">Selected dates:</strong>
-          {{ selectedRange.start }} -
-          {{ selectedRange.end }}
+          {{ formatDate(selectedRange.start.toString()) }} -
+          {{ formatDate(selectedRange.end.toString()) }}
           <div class="selected-dates-buttongroup">
             <UInput
               v-model="occupantName"
@@ -55,10 +55,7 @@
         <div class="delete-modal">
           <p>Delete this occupancy?</p>
           <div class="delete-modal-actions">
-            <UButton
-              color="neutral"
-              variant="outline"
-              @click="isDeleteModalOpen = false"
+            <UButton color="neutral" variant="outline" @click="closeDeleteModal"
               >Cancel</UButton
             >
             <UButton color="error" @click="confirmDelete">Delete</UButton>
@@ -72,19 +69,32 @@
 <script setup lang="ts">
 import { shallowRef, ref } from 'vue'
 import type { DateRange } from '@/types/dateRange'
+import type { Occupancy } from '@/types/occupancy'
+import type { TableColumn } from '@nuxt/ui'
+import { formatDate } from '@/utils/formatDate'
 
 const occupantName = ref('')
 
 const isDeleteModalOpen = ref(false)
 const occupancyToDelete = ref<number | null>(null)
 
-const { data: occupancies, refresh } = await useFetch('/api/occupancies')
-const columns = [
+const { data: occupancies, refresh } =
+  await useFetch<Occupancy[]>('/api/occupancies')
+
+const columns: TableColumn<Occupancy>[] = [
   { accessorKey: 'location', header: 'Location' },
   { accessorKey: 'occupant_name', header: 'Occupant' },
-  { accessorKey: 'arrival_date', header: 'Arrival' },
-  { accessorKey: 'departure_date', header: 'Departure' },
-  { id: 'actions', header: '', size: 50, enableResizing: false },
+  {
+    accessorKey: 'arrival_date',
+    header: 'Arrival',
+    cell: ({ row }) => formatDate(row.getValue<string>('arrival_date')),
+  },
+  {
+    accessorKey: 'departure_date',
+    header: 'Departure',
+    cell: ({ row }) => formatDate(row.getValue<string>('departure_date')),
+  },
+  { id: 'actions', header: '' },
 ]
 
 const selectedRange = shallowRef<DateRange>({
@@ -118,6 +128,11 @@ function cancelSelection() {
 function promptDeleteOccupancy(occupancyId: number) {
   occupancyToDelete.value = occupancyId
   isDeleteModalOpen.value = true
+}
+
+function closeDeleteModal() {
+  occupancyToDelete.value = null
+  isDeleteModalOpen.value = false
 }
 
 async function confirmDelete() {
