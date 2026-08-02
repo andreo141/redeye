@@ -50,16 +50,19 @@
         </template>
       </UTable>
     </div>
-    <UModal v-model:open="isDeleteModalOpen">
-      <template #content>
-        <div class="delete-modal">
-          <p>Delete this occupancy?</p>
-          <div class="delete-modal-actions">
-            <UButton color="neutral" variant="outline" @click="closeDeleteModal"
-              >Cancel</UButton
-            >
-            <UButton color="error" @click="confirmDelete">Delete</UButton>
-          </div>
+    <UModal
+      v-model:open="isDeleteModalOpen"
+      title="Delete this occupancy?"
+      description="This action cannot be undone."
+    >
+      <template #footer>
+        <div class="delete-modal-actions">
+          <UButton color="neutral" variant="outline" @click="closeDeleteModal"
+            >Cancel</UButton
+          >
+          <UButton color="error" variant="outline" @click="confirmDelete"
+            >Delete</UButton
+          >
         </div>
       </template>
     </UModal>

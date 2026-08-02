@@ -129,6 +129,11 @@
   transition: opacity 0.15s;
 }
 
+.delete-modal-actions {
+  display: flex;
+  gap: 8px;
+}
+
 tr:hover .delete-occupancy-button {
   opacity: 1;
 }
