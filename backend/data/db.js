@@ -21,6 +21,30 @@ db.run(`
     departure_date  TEXT NOT NULL
   )`);
 
+db.run(`
+  CREATE TABLE IF NOT EXISTS settings (
+    setting_key   TEXT PRIMARY KEY,
+    setting_value TEXT NOT NULL
+  )
+`);
+
+export function getSetting(key) {
+  const setting = db
+    .query("SELECT setting_value FROM settings WHERE setting_key = ?")
+    .get(key);
+  return setting?.setting_value;
+}
+
+export function setSetting(key, value) {
+  db.run(
+    `
+    INSERT INTO settings (setting_key, setting_value) VALUES (?, ?) 
+    ON CONFLICT(setting_key) DO UPDATE SET setting_value = ?
+    `,
+    [key, value, value],
+  );
+}
+
 export function getAlerts(limit = 20) {
   return db
     .query("SELECT * FROM alerts ORDER BY created_at DESC LIMIT ?")
