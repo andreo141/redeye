@@ -90,8 +90,14 @@
           <span v-if="rssiStatus === 'weak'">: weak signal</span>
           <span v-if="rssiStatus === 'critical'">: very weak signal</span>
         </div>
+        <div class="settings-menu">
+          <UButton
+            icon="lucide-settings-2"
+            variant="ghost"
+            color="neutral"
+          ></UButton>
+        </div>
       </div>
-
       <div class="content">
         <slot />
       </div>
