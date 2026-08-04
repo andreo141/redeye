@@ -6,6 +6,7 @@
         range
         :number-of-months="3"
         :year-controls="false"
+        variant="subtle"
       />
       <div class="calendar-selected-range">
         <span v-if="selectedRange.start && selectedRange.end">
