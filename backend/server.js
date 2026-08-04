@@ -4,6 +4,8 @@ import {
   getOccupancies,
   storeOccupancy,
   deleteOccupancy,
+  getSetting,
+  setSetting,
 } from "./data/db.js";
 import { logger } from "./logger.js";
 import { staticPlugin } from "@elysiajs/static";
@@ -22,6 +24,23 @@ const app = new Elysia()
     }),
   )
 
+  .get("/api/settings", () => ({
+    location: getSetting("location_name") ?? "Unknown location",
+  }))
+  .post(
+    "/api/settings",
+    ({ body }) => {
+      if (body.location !== undefined) {
+        setSetting("location_name", body.location);
+      }
+      return { ok: true };
+    },
+    {
+      body: t.Object({
+        location: t.Optional(t.String()),
+      }),
+    },
+  )
   .get("/api/alerts", () => getAlerts())
   .get("/api/occupancies", () => getOccupancies())
   .post(
