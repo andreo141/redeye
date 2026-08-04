@@ -17,6 +17,11 @@
   --color-green-950: #052e16;
 }
 
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
 .alert-item {
   display: flex;
   flex-direction: column;
