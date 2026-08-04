@@ -91,11 +91,27 @@
           <span v-if="rssiStatus === 'critical'">: very weak signal</span>
         </div>
         <div class="settings-menu">
-          <UButton
-            icon="lucide-settings-2"
-            variant="ghost"
-            color="neutral"
-          ></UButton>
+          <USlideover
+            v-model:open="isSettingsOpen"
+            title="Settings"
+            close-icon="i-lucide-arrow-right"
+          >
+            <UButton icon="lucide-settings-2" variant="ghost" color="neutral" />
+            <template #body>
+              <UForm
+                :validate="validate"
+                :state="settings"
+                class="space-y-4"
+                @submit="onSubmit"
+              >
+                <UFormField label="Sensor location name" name="location">
+                  <UInput v-model="settings.location" />
+                </UFormField>
+
+                <UButton type="submit" variant="subtle"> Save </UButton>
+              </UForm>
+            </template>
+          </USlideover>
         </div>
       </div>
       <div class="content">
@@ -109,6 +125,38 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import type { CameraStatus } from "~/types/cameraStatus";
+import type { Settings } from "~/types/settings";
+import type { FormError, FormSubmitEvent } from "@nuxt/ui";
+
+const toast = useToast();
+const isSettingsOpen = ref(false);
+
+const { data: currentSettings } = await useFetch<Settings>("/api/settings");
+const settings = reactive<Settings>({ location: "" });
+settings.location = currentSettings.value?.location ?? "";
+
+type Schema = typeof settings;
+
+function validate(state: Partial<Schema>): FormError[] {
+  const errors = [];
+  if (!state.location) errors.push({ name: "location", message: "Required" });
+  return errors;
+}
+
+async function onSubmit(event: FormSubmitEvent<Schema>) {
+  await $fetch("/api/settings", {
+    method: "POST",
+    body: {
+      location: event.data.location,
+    },
+  });
+  toast.add({
+    title: "Success",
+    description: "Your settings have been updated.",
+    color: "success",
+  });
+  isSettingsOpen.value = false;
+}
 
 const route = useRoute();
 let statusInterval: ReturnType<typeof setInterval>;
@@ -318,9 +366,6 @@ onUnmounted(() => clearInterval(statusInterval));
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #0d1a0d;
-  border: 1px solid #1a2e1a;
-  border-radius: 20px;
   padding: 4px 10px;
   font-size: 11px;
   color: #4a9e4a;
@@ -339,9 +384,6 @@ onUnmounted(() => clearInterval(statusInterval));
   display: flex;
   align-items: center;
   gap: 6px;
-  background: #1a0d0d;
-  border: 1px solid #2e1a1a;
-  border-radius: 20px;
   padding: 4px 10px;
   font-size: 11px;
   color: #9e4a4a;

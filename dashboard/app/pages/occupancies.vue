@@ -20,7 +20,22 @@
               size="sm"
             />
 
-            <UButton size="sm" @click="confirmSelection">Confirm</UButton>
+            <UButton
+              v-if="occupantName.trim()"
+              size="sm"
+              variant="outline"
+              @click="confirmSelection"
+              >Confirm</UButton
+            >
+            <UButton
+              v-else
+              size="sm"
+              title="Enter an occupant name first"
+              variant="outline"
+              disabled
+              @click="confirmSelection"
+              >Confirm</UButton
+            >
             <UButton
               size="sm"
               color="neutral"
@@ -58,12 +73,12 @@
     >
       <template #footer>
         <div class="delete-modal-actions">
-          <UButton color="neutral" variant="outline" @click="closeDeleteModal"
-            >Cancel</UButton
-          >
-          <UButton color="error" variant="outline" @click="confirmDelete"
-            >Delete</UButton
-          >
+          <UButton color="neutral" variant="outline" @click="closeDeleteModal">
+            Cancel
+          </UButton>
+          <UButton color="error" variant="outline" @click="confirmDelete">
+            Delete
+          </UButton>
         </div>
       </template>
     </UModal>
