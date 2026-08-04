@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
-import { storeAlert, isLocationOccupied } from "./data/db.js";
+import { storeAlert, isLocationOccupied, getSetting } from "./data/db.js";
 import { getCameraUrl } from "./server.js";
 import { logger } from "./logger.js";
 
@@ -55,21 +55,22 @@ mqttClient.on("message", async (topic, payload) => {
 
   if (isCoolingDown()) return;
 
+  logger.info("Movement detected");
+
   const detectionTime = new Date().toLocaleTimeString("nl-BE", {
     timeZone: "Europe/Brussels",
   });
-
+  const sensorLocation = getSetting("location_name") ?? "Unknown location";
   const today = new Date().toLocaleDateString("en-CA", {
     timeZone: "Europe/Brussels",
   });
 
-  if (isLocationOccupied("Bergkot", today)) {
+  if (isLocationOccupied(sensorLocation, today)) {
     logger.info("Location is currently occupied. Alert not sent.");
     return;
   }
 
-  // TODO: replace with dynamic sensor location lookup
-  const message = `Motion detected in Bergkot at ${detectionTime}!`;
+  const message = `Motion detected in ${sensorLocation} at ${detectionTime}!`;
 
   try {
     const sentMessageId = await sendTextMessage(message);
@@ -78,7 +79,7 @@ mqttClient.on("message", async (topic, payload) => {
 
     if (photo && filename) await sendPhoto(filename, sentMessageId);
 
-    storeAlert(topic, "Bergkot", filename);
+    storeAlert(topic, sensorLocation, filename);
     logger.info({ filename, sentMessageId }, "Alert sent with photo");
   } catch (err) {
     logger.error({ err }, "Error while sending Telegram message:");
