@@ -23,6 +23,9 @@ export default defineNuxtConfig({
       "/api/occupancies/**": {
         proxy: `${process.env.API_PROXY_TARGET}/api/occupancies/**`,
       },
+      "/api/settings/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/settings/**`,
+      },
     },
   },
 
@@ -39,6 +42,9 @@ export default defineNuxtConfig({
       },
       "/api/occupancies/**": {
         proxy: `${process.env.API_PROXY_TARGET}/api/occupancies/**`,
+      },
+      "/api/settings/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/settings/**`,
       },
     },
   },
