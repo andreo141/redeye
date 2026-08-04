@@ -144,12 +144,22 @@ function validate(state: Partial<Schema>): FormError[] {
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  await $fetch("/api/settings", {
-    method: "POST",
-    body: {
-      location: event.data.location,
-    },
-  });
+  try {
+    await $fetch("/api/settings", {
+      method: "POST",
+      body: {
+        location: event.data.location,
+      },
+    });
+  } catch (err) {
+    toast.add({
+      title: "Error",
+      description: "Something went wrong while saving your settings.",
+      color: "error",
+    });
+    console.error("Something went wrong while saving your settings.", err);
+    return;
+  }
   toast.add({
     title: "Success",
     description: "Your settings have been updated.",
