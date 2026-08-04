@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-const alerts = ref<Alert[]>([])
+import type { Alert } from '@/types/alert'
 
-const { data } = await useFetch('/api/alerts')
-alerts.value = data.value ?? []
+const { data } = await useFetch<Alert[]>('/api/alerts')
+const alerts = ref<Alert[]>(data.value ?? [])
 </script>
