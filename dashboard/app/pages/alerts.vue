@@ -6,7 +6,7 @@
         class="overview-card"
         variant="soft"
       >
-        <div v-if="alerts.length === 0">No alerts yet</div>
+        <div v-if="alerts?.length === 0">No alerts yet</div>
         <AlertItem v-for="alert in alerts" :key="alert.id" :alert="alert" />
       </UCard>
     </UContainer>
@@ -16,6 +16,5 @@
 <script setup lang="ts">
 import type { Alert } from '@/types/alert'
 
-const { data } = await useFetch<Alert[]>('/api/alerts')
-const alerts = ref<Alert[]>(data.value ?? [])
+const { data: alerts } = await useFetch<Alert[]>('/api/alerts')
 </script>
