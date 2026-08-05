@@ -46,8 +46,9 @@ const app = new Elysia()
   .post(
     "/api/occupancies",
     ({ body }) => {
+      const location = getSetting("location_name") ?? "Unknown location";
       storeOccupancy(
-        body.location,
+        location,
         body.occupantName,
         body.arrivalDate,
         body.departureDate,
