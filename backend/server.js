@@ -57,7 +57,6 @@ const app = new Elysia()
     },
     {
       body: t.Object({
-        location: t.String(),
         occupantName: t.String(),
         arrivalDate: t.String({ format: "date" }),
         departureDate: t.String({ format: "date" }),
