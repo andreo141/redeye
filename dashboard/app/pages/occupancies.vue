@@ -127,7 +127,6 @@ async function confirmSelection() {
   await $fetch('/api/occupancies', {
     method: 'POST',
     body: {
-      location: 'Bergkot', // FIXME: Hardcoded location, should be dynamic
       occupantName: occupantName.value,
       arrivalDate: selectedRange.value.start?.toString(),
       departureDate: selectedRange.value.end?.toString(),
