@@ -4,6 +4,7 @@ import {
   getOccupancies,
   storeOccupancy,
   deleteOccupancy,
+  getCurrentOccupancy,
   getSetting,
   setSetting,
 } from "./data/db.js";
@@ -77,6 +78,18 @@ const app = new Elysia()
     lastRssi = body?.rssi ?? null;
 
     return { ok: true };
+  })
+  .get("/api/status", () => {
+    const location = getSetting("location_name") ?? "Unknown location";
+    const today = new Date().toLocaleDateString("en-CA", {
+      timeZone: "Europe/Brussels",
+    });
+    const occupancy = getCurrentOccupancy(location, today);
+
+    return {
+      armed: occupancy === null,
+      occupancy,
+    };
   })
   .get("/api/camera/status", () => ({
     online: cameraEnabled,

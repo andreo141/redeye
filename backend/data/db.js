@@ -77,19 +77,23 @@ export function storeOccupancy(
   );
 }
 
-export function isLocationOccupied(location, today) {
-  const result = db
-    .query(
-      `
-      SELECT * FROM occupancies 
-      WHERE location = ?
-      AND ? BETWEEN arrival_date AND departure_date
-      LIMIT 1
-      `,
-    )
-    .all(location, today);
+export function getCurrentOccupancy(location, today) {
+  return (
+    db
+      .query(
+        `
+        SELECT * FROM occupancies
+        WHERE location = ?
+        AND ? BETWEEN arrival_date AND departure_date
+        LIMIT 1
+        `,
+      )
+      .get(location, today) ?? null
+  );
+}
 
-  return result.length > 0;
+export function isLocationOccupied(location, today) {
+  return getCurrentOccupancy(location, today) !== null;
 }
 
 export function deleteOccupancy(id) {
