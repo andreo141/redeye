@@ -71,12 +71,20 @@
       <div class="topbar">
         <span class="page-title">{{ title }}</span>
         <div class="topbar-right">
-          <div v-if="cameraEnabled" class="status-pill-online">
-            <div class="status-dot-online" />
+          <div v-if="armed" class="status-pill-good">
+            <div class="status-dot-good" />
+            Armed
+          </div>
+          <div v-else class="status-pill-bad">
+            <div class="status-dot-bad" />
+            Disarmed
+          </div>
+          <div v-if="cameraEnabled" class="status-pill-good">
+            <div class="status-dot-good" />
             Camera online
           </div>
-          <div v-else class="status-pill-offline">
-            <div class="status-dot-offline" />
+          <div v-else class="status-pill-bad">
+            <div class="status-dot-bad" />
             Camera offline
           </div>
         </div>
@@ -125,6 +133,7 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import type { CameraStatus } from "~/types/cameraStatus";
+import type { SystemStatus } from "~/types/status";
 import type { Settings } from "~/types/settings";
 import type { FormError, FormSubmitEvent } from "@nuxt/ui";
 
@@ -176,6 +185,11 @@ const { data: cameraStatus, refresh: refreshCameraStatus } =
 
 const cameraEnabled = computed(() => cameraStatus.value?.online ?? false);
 
+const { data: systemStatus, refresh: refreshSystemStatus } =
+  await useFetch<SystemStatus>("/api/status");
+
+const armed = computed(() => systemStatus.value?.armed ?? false);
+
 const lastRssi = computed(() => cameraStatus.value?.lastRssi ?? null);
 const rssiStatus = computed(() => {
   const rssi = cameraStatus.value?.lastRssi;
@@ -195,7 +209,10 @@ const titles: Record<string, string> = {
 };
 
 onMounted(() => {
-  statusInterval = setInterval(refreshCameraStatus, 10_000);
+  statusInterval = setInterval(() => {
+    refreshCameraStatus();
+    refreshSystemStatus();
+  }, 10_000);
 });
 
 onUnmounted(() => clearInterval(statusInterval));
@@ -372,7 +389,7 @@ onUnmounted(() => clearInterval(statusInterval));
   gap: 12px;
 }
 
-.status-pill-online {
+.status-pill-good {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -382,7 +399,7 @@ onUnmounted(() => clearInterval(statusInterval));
   font-family: "DM Mono", monospace;
 }
 
-.status-dot-online {
+.status-dot-good {
   width: 6px;
   height: 6px;
   background: #4a9e4a;
@@ -390,7 +407,7 @@ onUnmounted(() => clearInterval(statusInterval));
   animation: pulse 2s ease-in-out infinite;
 }
 
-.status-pill-offline {
+.status-pill-bad {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -400,7 +417,7 @@ onUnmounted(() => clearInterval(statusInterval));
   font-family: "DM Mono", monospace;
 }
 
-.status-dot-offline {
+.status-dot-bad {
   width: 6px;
   height: 6px;
   background: #9e4a4a;

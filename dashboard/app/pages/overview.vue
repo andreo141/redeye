@@ -1,5 +1,12 @@
 <template>
   <main>
+    <UContainer>
+      <UCard id="overview-status-card" class="overview-card status-card" variant="soft">
+        <div class="status-card-value" :class="status?.armed ? 'status-armed' : 'status-disarmed'">
+          {{ statusText }}
+        </div>
+      </UCard>
+    </UContainer>
     <UContainer class="overview-container">
       <UCard
         id="overview-last-motion-card"
@@ -36,11 +43,20 @@
 </template>
 
 <script setup lang="ts">
+import type { SystemStatus } from '~/types/status'
+
 const alerts = ref<Alert[]>([])
 const now = ref(Date.now())
 
 const { data } = await useFetch('/api/alerts')
 alerts.value = data.value ?? []
+
+const { data: status, refresh: refreshStatus } =
+  await useFetch<SystemStatus>('/api/status')
+
+const statusText = computed(() =>
+  status.value ? formatStatus(status.value) : ''
+)
 
 const lastMotion = computed(() => {
   if (alerts.value.length === 0) return 'No motion detected'
@@ -94,7 +110,10 @@ let interval: ReturnType<typeof setInterval>
 let clock: ReturnType<typeof setInterval>
 
 onMounted(() => {
-  interval = setInterval(fetchAlerts, 30_000)
+  interval = setInterval(() => {
+    fetchAlerts()
+    refreshStatus()
+  }, 30_000)
   clock = setInterval(() => {
     now.value = Date.now()
   }, 30_000)
@@ -106,4 +125,23 @@ onUnmounted(() => {
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.status-card {
+  margin-bottom: 16px;
+}
+
+.status-card-value {
+  font-size: 20px;
+  font-weight: 400;
+  font-family: 'DM Mono', monospace;
+  letter-spacing: -0.02em;
+}
+
+.status-armed {
+  color: #4a9e4a;
+}
+
+.status-disarmed {
+  color: #9e4a4a;
+}
+</style>
