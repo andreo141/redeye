@@ -133,7 +133,8 @@ void loop() {
   http.begin(backendUrl + "/api/camera/heartbeat");
   http.addHeader("Content-Type", "application/json");
 
-  String body = "{\"ip\":\"" + WiFi.localIP().toString() + "\"}";
+  long rssi = WiFi.RSSI();
+  String body = "{\"ip\":\"" + WiFi.localIP().toString() + "\",\"rssi\":" + String(rssi) + "}";
 
   int responseCode = http.POST(body);
 
