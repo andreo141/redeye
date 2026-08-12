@@ -1,6 +1,8 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
-import { storeAlert, isLocationOccupied, getSetting } from "./data/db.js";
+import { storeAlert, getSetting } from "./data/db.js";
+import { getArmedState } from "./helpers/getArmedState.js";
+import { getToday } from "./helpers/today.js";
 import { getCameraUrl } from "./server.js";
 import { logger } from "./logger.js";
 
@@ -61,12 +63,10 @@ mqttClient.on("message", async (topic, payload) => {
     timeZone: "Europe/Brussels",
   });
   const sensorLocation = getSetting("location_name") ?? "Unknown location";
-  const today = new Date().toLocaleDateString("en-CA", {
-    timeZone: "Europe/Brussels",
-  });
+  const { armed } = getArmedState(sensorLocation, getToday());
 
-  if (isLocationOccupied(sensorLocation, today)) {
-    logger.info("Location is currently occupied. Alert not sent.");
+  if (!armed) {
+    logger.info("Property is disarmed. Alert not sent.");
     return;
   }
 
