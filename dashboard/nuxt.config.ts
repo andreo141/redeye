@@ -29,6 +29,9 @@ export default defineNuxtConfig({
       "/api/status/**": {
         proxy: `${process.env.API_PROXY_TARGET}/api/status/**`,
       },
+      "/api/override/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/override/**`,
+      },
     },
   },
 
@@ -51,6 +54,9 @@ export default defineNuxtConfig({
       },
       "/api/status/**": {
         proxy: `${process.env.API_PROXY_TARGET}/api/status/**`,
+      },
+      "/api/override/**": {
+        proxy: `${process.env.API_PROXY_TARGET}/api/override/**`,
       },
     },
   },
