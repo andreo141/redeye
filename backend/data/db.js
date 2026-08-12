@@ -28,6 +28,16 @@ db.run(`
   )
 `);
 
+db.run(`
+  CREATE TABLE IF NOT EXISTS overrides (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    location   TEXT NOT NULL UNIQUE,
+    state      TEXT NOT NULL,
+    set_at     DATETIME DEFAULT CURRENT_TIMESTAMP,
+    expires_at DATETIME
+  )
+`);
+
 export function getSetting(key) {
   const setting = db
     .query("SELECT setting_value FROM settings WHERE setting_key = ?")
@@ -92,10 +102,30 @@ export function getCurrentOccupancy(location, today) {
   );
 }
 
-export function isLocationOccupied(location, today) {
-  return getCurrentOccupancy(location, today) !== null;
-}
-
 export function deleteOccupancy(id) {
   db.run("DELETE FROM occupancies WHERE id = ?", [id]);
+}
+
+export function getOverride(location) {
+  return (
+    db.query("SELECT * FROM overrides WHERE location = ?").get(location) ??
+    null
+  );
+}
+
+export function setOverride(location, state, expiresAt) {
+  db.run(
+    `
+    INSERT INTO overrides (location, state, expires_at) VALUES (?, ?, ?)
+    ON CONFLICT(location) DO UPDATE SET
+      state = ?,
+      set_at = CURRENT_TIMESTAMP,
+      expires_at = ?
+    `,
+    [location, state, expiresAt, state, expiresAt],
+  );
+}
+
+export function clearOverride(location) {
+  db.run("DELETE FROM overrides WHERE location = ?", [location]);
 }
