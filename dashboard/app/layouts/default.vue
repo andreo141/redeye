@@ -71,14 +71,14 @@
       <div class="topbar">
         <span class="page-title">{{ title }}</span>
         <div class="topbar-right">
-          <div v-if="armed" class="status-pill-good">
-            <div class="status-dot-good" />
-            Armed
-          </div>
-          <div v-else class="status-pill-bad">
-            <div class="status-dot-bad" />
-            Disarmed
-          </div>
+          <USwitch
+            :model-value="armed"
+            :label="armed ? 'Armed' : 'Disarmed'"
+            :color="armed ? 'success' : 'error'"
+            checked-icon="i-lucide-shield-check"
+            unchecked-icon="i-lucide-shield-off"
+            @update:model-value="onToggleArmed"
+          />
           <div v-if="cameraEnabled" class="status-pill-good">
             <div class="status-dot-good" />
             Camera online
@@ -189,6 +189,26 @@ const { data: systemStatus, refresh: refreshSystemStatus } =
   await useFetch<SystemStatus>("/api/status");
 
 const armed = computed(() => systemStatus.value?.armed ?? false);
+
+async function onToggleArmed(value: boolean) {
+  try {
+    await $fetch("/api/override", {
+      method: "POST",
+      body: {
+        state: value ? "armed" : "disarmed",
+      },
+    });
+  } catch (err) {
+    toast.add({
+      title: "Error",
+      description: "Something went wrong while updating the armed state.",
+      color: "error",
+    });
+    console.error("Something went wrong while updating the armed state.", err);
+    return;
+  }
+  refreshSystemStatus();
+}
 
 const lastRssi = computed(() => cameraStatus.value?.lastRssi ?? null);
 const rssiStatus = computed(() => {
