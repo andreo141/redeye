@@ -76,7 +76,10 @@
               :model-value="armed"
               :label="armed ? 'Armed' : 'Disarmed'"
               color="success"
-              :ui="{ base: 'data-[state=unchecked]:bg-error' }"
+              :ui="{
+                base: 'data-[state=unchecked]:bg-error',
+                label: 'min-w-[8ch]',
+              }"
               checked-icon="i-lucide-shield-check"
               unchecked-icon="i-lucide-shield-off"
               @update:model-value="onToggleArmed"
@@ -434,7 +437,6 @@ onUnmounted(() => clearInterval(statusInterval));
 .armed-switch {
   display: flex;
   align-items: center;
-  min-width: 92px;
 }
 
 .status-pill-good {

@@ -1,8 +1,15 @@
 <template>
   <main>
     <UContainer>
-      <UCard id="overview-status-card" class="overview-card status-card" variant="soft">
-        <div class="status-card-value" :class="status?.armed ? 'status-armed' : 'status-disarmed'">
+      <UCard
+        id="overview-status-card"
+        class="overview-card status-card"
+        variant="soft"
+      >
+        <div
+          class="status-card-value"
+          :class="status?.armed ? 'status-armed' : 'status-disarmed'"
+        >
           {{ statusText }}
         </div>
       </UCard>
@@ -52,8 +59,12 @@ alerts.value = data.value ?? []
 const { status, refresh: refreshStatus } = useStatus()
 if (!status.value) await refreshStatus()
 
+watch(status, () => {
+  now.value = Date.now()
+})
+
 const statusText = computed(() =>
-  status.value ? formatStatus(status.value, now.value) : ''
+  status.value ? formatStatus(status.value, now.value) : '',
 )
 
 const lastMotion = computed(() => {
