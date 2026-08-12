@@ -71,14 +71,17 @@
       <div class="topbar">
         <span class="page-title">{{ title }}</span>
         <div class="topbar-right">
-          <USwitch
-            :model-value="armed"
-            :label="armed ? 'Armed' : 'Disarmed'"
-            :color="armed ? 'success' : 'error'"
-            checked-icon="i-lucide-shield-check"
-            unchecked-icon="i-lucide-shield-off"
-            @update:model-value="onToggleArmed"
-          />
+          <div class="armed-switch">
+            <USwitch
+              :model-value="armed"
+              :label="armed ? 'Armed' : 'Disarmed'"
+              color="success"
+              :ui="{ base: 'data-[state=unchecked]:bg-error' }"
+              checked-icon="i-lucide-shield-check"
+              unchecked-icon="i-lucide-shield-off"
+              @update:model-value="onToggleArmed"
+            />
+          </div>
           <div v-if="cameraEnabled" class="status-pill-good">
             <div class="status-dot-good" />
             Camera online
@@ -116,6 +119,18 @@
                   <UInput v-model="settings.location" />
                 </UFormField>
 
+                <UFormField
+                  label="Force disarm duration (minutes)"
+                  name="forceDisarmMinutes"
+                  description="How long the property stays disarmed after switching the alarm off manually."
+                >
+                  <UInput
+                    v-model.number="settings.forceDisarmMinutes"
+                    type="number"
+                    :min="1"
+                  />
+                </UFormField>
+
                 <UButton type="submit" variant="subtle"> Save </UButton>
               </UForm>
             </template>
@@ -133,7 +148,6 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import type { CameraStatus } from "~/types/cameraStatus";
-import type { SystemStatus } from "~/types/status";
 import type { Settings } from "~/types/settings";
 import type { FormError, FormSubmitEvent } from "@nuxt/ui";
 
@@ -141,14 +155,21 @@ const toast = useToast();
 const isSettingsOpen = ref(false);
 
 const { data: currentSettings } = await useFetch<Settings>("/api/settings");
-const settings = reactive<Settings>({ location: "" });
+const settings = reactive<Settings>({ location: "", forceDisarmMinutes: 60 });
 settings.location = currentSettings.value?.location ?? "";
+settings.forceDisarmMinutes = currentSettings.value?.forceDisarmMinutes ?? 60;
 
 type Schema = typeof settings;
 
 function validate(state: Partial<Schema>): FormError[] {
   const errors = [];
   if (!state.location) errors.push({ name: "location", message: "Required" });
+  if (!state.forceDisarmMinutes || state.forceDisarmMinutes < 1) {
+    errors.push({
+      name: "forceDisarmMinutes",
+      message: "Must be at least 1 minute",
+    });
+  }
   return errors;
 }
 
@@ -158,6 +179,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       method: "POST",
       body: {
         location: event.data.location,
+        forceDisarmMinutes: event.data.forceDisarmMinutes,
       },
     });
   } catch (err) {
@@ -185,8 +207,8 @@ const { data: cameraStatus, refresh: refreshCameraStatus } =
 
 const cameraEnabled = computed(() => cameraStatus.value?.online ?? false);
 
-const { data: systemStatus, refresh: refreshSystemStatus } =
-  await useFetch<SystemStatus>("/api/status");
+const { status: systemStatus, refresh: refreshSystemStatus } = useStatus();
+if (!systemStatus.value) await refreshSystemStatus();
 
 const armed = computed(() => systemStatus.value?.armed ?? false);
 
@@ -407,6 +429,12 @@ onUnmounted(() => clearInterval(statusInterval));
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.armed-switch {
+  display: flex;
+  align-items: center;
+  min-width: 92px;
 }
 
 .status-pill-good {

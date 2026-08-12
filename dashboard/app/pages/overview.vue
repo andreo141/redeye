@@ -43,19 +43,17 @@
 </template>
 
 <script setup lang="ts">
-import type { SystemStatus } from '~/types/status'
-
 const alerts = ref<Alert[]>([])
 const now = ref(Date.now())
 
 const { data } = await useFetch('/api/alerts')
 alerts.value = data.value ?? []
 
-const { data: status, refresh: refreshStatus } =
-  await useFetch<SystemStatus>('/api/status')
+const { status, refresh: refreshStatus } = useStatus()
+if (!status.value) await refreshStatus()
 
 const statusText = computed(() =>
-  status.value ? formatStatus(status.value) : ''
+  status.value ? formatStatus(status.value, now.value) : ''
 )
 
 const lastMotion = computed(() => {
@@ -110,10 +108,7 @@ let interval: ReturnType<typeof setInterval>
 let clock: ReturnType<typeof setInterval>
 
 onMounted(() => {
-  interval = setInterval(() => {
-    fetchAlerts()
-    refreshStatus()
-  }, 30_000)
+  interval = setInterval(fetchAlerts, 30_000)
   clock = setInterval(() => {
     now.value = Date.now()
   }, 30_000)

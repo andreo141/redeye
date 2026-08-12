@@ -11,10 +11,8 @@ export function getArmedState(location, today) {
 
   if (overrideExpired) clearOverride(location);
 
-  const armed = resolveArmedState(
-    occupancy === null,
-    overrideExpired ? null : override,
-  );
+  const activeOverride = overrideExpired ? null : override;
+  const armed = resolveArmedState(occupancy === null, activeOverride);
 
-  return { armed, occupancy };
+  return { armed, occupancy, override: activeOverride };
 }

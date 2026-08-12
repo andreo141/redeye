@@ -21,6 +21,11 @@ let cameraEnabled = false;
 let lastHeartbeat = null;
 let lastRssi = null;
 
+const DEFAULT_FORCE_DISARM_MINUTES = 60;
+
+const getForceDisarmMinutes = () =>
+  Number(getSetting("force_disarm_minutes")) || DEFAULT_FORCE_DISARM_MINUTES;
+
 const app = new Elysia()
   .use(
     staticPlugin({
@@ -31,6 +36,7 @@ const app = new Elysia()
 
   .get("/api/settings", () => ({
     location: getSetting("location_name") ?? "Unknown location",
+    forceDisarmMinutes: getForceDisarmMinutes(),
   }))
   .post(
     "/api/settings",
@@ -38,11 +44,15 @@ const app = new Elysia()
       if (body.location !== undefined) {
         setSetting("location_name", body.location);
       }
+      if (body.forceDisarmMinutes !== undefined) {
+        setSetting("force_disarm_minutes", String(body.forceDisarmMinutes));
+      }
       return { ok: true };
     },
     {
       body: t.Object({
         location: t.Optional(t.String()),
+        forceDisarmMinutes: t.Optional(t.Integer({ minimum: 1 })),
       }),
     },
   )
@@ -101,9 +111,8 @@ const app = new Elysia()
       }
 
       if (body.state === "disarmed") {
-        const minutes = Number(getSetting("force_disarm_minutes")) || 60;
         const expiresAt = new Date(
-          Date.now() + minutes * 60_000,
+          Date.now() + getForceDisarmMinutes() * 60_000,
         ).toISOString();
         setOverride(location, "disarmed", expiresAt);
       } else {
