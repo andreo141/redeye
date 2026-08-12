@@ -1,8 +1,15 @@
 <template>
   <main>
     <UContainer>
-      <UCard id="overview-status-card" class="overview-card status-card" variant="soft">
-        <div class="status-card-value" :class="status?.armed ? 'status-armed' : 'status-disarmed'">
+      <UCard
+        id="overview-status-card"
+        class="overview-card status-card"
+        variant="soft"
+      >
+        <div
+          class="status-card-value"
+          :class="status?.armed ? 'status-armed' : 'status-disarmed'"
+        >
           {{ statusText }}
         </div>
       </UCard>
@@ -44,18 +51,19 @@
 
 <script setup lang="ts">
 import type { SystemStatus } from '~/types/status'
+import type { Alert } from '~/types/alert'
 
 const alerts = ref<Alert[]>([])
 const now = ref(Date.now())
 
-const { data } = await useFetch('/api/alerts')
+const { data } = await useFetch<Alert[]>('/api/alerts')
 alerts.value = data.value ?? []
 
 const { data: status, refresh: refreshStatus } =
   await useFetch<SystemStatus>('/api/status')
 
 const statusText = computed(() =>
-  status.value ? formatStatus(status.value) : ''
+  status.value ? formatStatus(status.value) : '',
 )
 
 const lastMotion = computed(() => {
@@ -103,7 +111,7 @@ const alertsToday = computed(() => {
 })
 
 const fetchAlerts = async () => {
-  alerts.value = await $fetch('/api/alerts')
+  alerts.value = await $fetch<Alert[]>('/api/alerts')
 }
 
 let interval: ReturnType<typeof setInterval>
