@@ -71,14 +71,14 @@
       <div class="topbar">
         <span class="page-title">{{ title }}</span>
         <div class="topbar-right">
-          <div v-if="armed" class="status-pill-good">
-            <div class="status-dot-good" />
-            Armed
-          </div>
-          <div v-else class="status-pill-bad">
-            <div class="status-dot-bad" />
-            Disarmed
-          </div>
+          <USwitch
+            unchecked-icon="i-lucide-shield-off"
+            checked-icon="i-lucide-shield"
+            default-value
+            color="primary"
+          />
+          <div v-if="armed" class="status-pill-good"></div>
+          <div v-else class="status-pill-bad">Disarmed</div>
           <div v-if="cameraEnabled" class="status-pill-good">
             <div class="status-dot-good" />
             Camera online
