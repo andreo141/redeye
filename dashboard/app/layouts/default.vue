@@ -74,10 +74,10 @@
           <USwitch
             unchecked-icon="i-lucide-shield-off"
             checked-icon="i-lucide-shield"
-            default-value
-            color="primary"
+            color="success"
+            :model-value="armed"
           />
-          <div v-if="armed" class="status-pill-good"></div>
+          <div v-if="armed" class="status-pill-good">Armed</div>
           <div v-else class="status-pill-bad">Disarmed</div>
           <div v-if="cameraEnabled" class="status-pill-good">
             <div class="status-dot-good" />
@@ -140,6 +140,8 @@ import type { FormError, FormSubmitEvent } from "@nuxt/ui";
 const toast = useToast();
 const isSettingsOpen = ref(false);
 
+const armed = computed(() => systemStatus.value?.armed ?? false);
+
 const { data: currentSettings } = await useFetch<Settings>("/api/settings");
 const settings = reactive<Settings>({ location: "" });
 settings.location = currentSettings.value?.location ?? "";
@@ -187,8 +189,6 @@ const cameraEnabled = computed(() => cameraStatus.value?.online ?? false);
 
 const { data: systemStatus, refresh: refreshSystemStatus } =
   await useFetch<SystemStatus>("/api/status");
-
-const armed = computed(() => systemStatus.value?.armed ?? false);
 
 const lastRssi = computed(() => cameraStatus.value?.lastRssi ?? null);
 const rssiStatus = computed(() => {
