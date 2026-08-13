@@ -7,7 +7,10 @@ import {
   getCurrentOccupancy,
   getSetting,
   setSetting,
+  getOverride,
+  storeOverride,
 } from "./data/db.js";
+import { getLocation, getToday } from "./helpers/getters";
 import { logger } from "./logger.js";
 import { staticPlugin } from "@elysiajs/static";
 
@@ -26,7 +29,7 @@ const app = new Elysia()
   )
 
   .get("/api/settings", () => ({
-    location: getSetting("location_name") ?? "Unknown location",
+    location: getLocation(),
   }))
   .post(
     "/api/settings",
@@ -47,9 +50,8 @@ const app = new Elysia()
   .post(
     "/api/occupancies",
     ({ body }) => {
-      const location = getSetting("location_name") ?? "Unknown location";
       storeOccupancy(
-        location,
+        getLocation(),
         body.occupantName,
         body.arrivalDate,
         body.departureDate,
@@ -68,6 +70,21 @@ const app = new Elysia()
     deleteOccupancy(params.id);
     return { ok: true };
   })
+  .get("/api/override", () => getOverride())
+  .post(
+    "/api/override",
+    ({ body }) => {
+      storeOverride(getLocation(), body.state, body.set_at, body.expires_at);
+      return { ok: true };
+    },
+    {
+      body: t.Object({
+        state: t.String("armed") || t.String("disarmed"),
+        set_at: t.String(),
+        expires_at: t.String(),
+      }),
+    },
+  )
   .post("/api/camera/heartbeat", ({ body }) => {
     const ip = body?.ip;
     if (!ip) return { ok: false };
@@ -80,10 +97,8 @@ const app = new Elysia()
     return { ok: true };
   })
   .get("/api/status", () => {
-    const location = getSetting("location_name") ?? "Unknown location";
-    const today = new Date().toLocaleDateString("en-CA", {
-      timeZone: "Europe/Brussels",
-    });
+    const location = getLocation();
+    const today = getToday();
     const occupancy = getCurrentOccupancy(location, today);
 
     return {

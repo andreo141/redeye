@@ -76,6 +76,7 @@
             checked-icon="i-lucide-shield"
             color="success"
             :model-value="armed"
+            @v-on:change="setOverride"
           />
           <div v-if="armed" class="status-pill-good">Armed</div>
           <div v-else class="status-pill-bad">Disarmed</div>
@@ -146,12 +147,39 @@ const { data: currentSettings } = await useFetch<Settings>("/api/settings");
 const settings = reactive<Settings>({ location: "" });
 settings.location = currentSettings.value?.location ?? "";
 
+const OVERRIDE_EXPIRATION_MINUTES = 60;
+
 type Schema = typeof settings;
 
 function validate(state: Partial<Schema>): FormError[] {
   const errors = [];
   if (!state.location) errors.push({ name: "location", message: "Required" });
   return errors;
+}
+
+const { data: activeOverride } = (await useFetch("/api/override")) ?? null;
+console.log(activeOverride);
+
+async function setOverride() {
+  try {
+    await $fetch("/api/override", {
+      method: "POST",
+      body: {
+        state: !armed.value,
+        set_at: String(Date.now()),
+        expires_at: OVERRIDE_EXPIRATION_MINUTES,
+      },
+    });
+  } catch (err) {
+    const errorMsg = "Something went wrong when setting the override";
+    toast.add({
+      title: "Error",
+      description: errorMsg,
+      color: "error",
+    });
+    console.error(errorMsg, err);
+    return;
+  }
 }
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {

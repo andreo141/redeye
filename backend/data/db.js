@@ -28,6 +28,16 @@ db.run(`
   )
 `);
 
+db.run(`
+  CREATE TABLE IF NOT EXISTS overrides (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  location        TEXT NOT NULL,
+  state           TEXT NOT NULL,
+  set_at          TEXT NOT NULL,
+  expires_at      TEXT NOT NULL
+  )
+  `);
+
 export function getSetting(key) {
   const setting = db
     .query("SELECT setting_value FROM settings WHERE setting_key = ?")
@@ -42,6 +52,25 @@ export function setSetting(key, value) {
     ON CONFLICT(setting_key) DO UPDATE SET setting_value = ?
     `,
     [key, value, value],
+  );
+}
+
+export function getOverride(location, today) {
+  return db
+    .query(
+      `
+      SELECT * FROM overrides
+      WHERE location = ?
+      AND ? BETWEEN set_at AND expires_at
+      `,
+    )
+    .get(location, today);
+}
+
+export function setOverride(location, state, set_at, expires_at) {
+  db.run(
+    "INSERT INTO overrides (location, today, set_at, expires_at) VALUES (?, ?, ?, ?)",
+    [location, state, set_at, expires_at],
   );
 }
 
