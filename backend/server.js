@@ -9,6 +9,7 @@ import {
   setSetting,
   getOverride,
   setOverride,
+  clearOverride,
 } from "./data/db.js";
 import { getLocation, getToday } from "./helpers/getters";
 import { logger } from "./logger.js";
@@ -95,8 +96,6 @@ const app = new Elysia()
         ).toIsoString();
         setOverride(location, body.state, expiresAt);
       }
-
-      setOverride(getLocation(), body.state, body.set_at, body.expires_at);
 
       return { ok: true };
     },
