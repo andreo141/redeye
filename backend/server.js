@@ -20,6 +20,11 @@ let cameraEnabled = false;
 let lastHeartbeat = null;
 let lastRssi = null;
 
+const DEFAULT_OVERRIDE_EXPIRATION_MINUTES = 60;
+
+const getForceDisarmMinutes = () =>
+  Number(getSetting("force_disarm_minutes")) || DEFAULT_FORCE_DISARM_MINUTES;
+
 const app = new Elysia()
   .use(
     staticPlugin({
@@ -74,14 +79,30 @@ const app = new Elysia()
   .post(
     "/api/override",
     ({ body }) => {
+      const location = getLocation();
+      const today = getToday();
+      const occupancy = getCurrentOccupancy(location, today);
+      const calendarState = occupancy ? "disarmed" : "armed";
+
+      if (body.state === calendarState) {
+        clearOverride(location);
+        return { ok: true };
+      }
+
+      if (body.state === "disarmed") {
+        const expiresAt = new Date(
+          Date.now() + getForceDisarmMinutes() * 60_000,
+        ).toIsoString();
+        setOverride(location, body.state, expiresAt);
+      }
+
       setOverride(getLocation(), body.state, body.set_at, body.expires_at);
+
       return { ok: true };
     },
     {
       body: t.Object({
-        state: t.String("armed") || t.String("disarmed"),
-        set_at: t.String(),
-        expires_at: t.String(),
+        state: t.Union([t.Literal("armed"), t.Literal("disarmed")]),
       }),
     },
   )

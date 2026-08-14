@@ -31,10 +31,10 @@ db.run(`
 db.run(`
   CREATE TABLE IF NOT EXISTS overrides (
   id              INTEGER PRIMARY KEY AUTOINCREMENT,
-  location        TEXT NOT NULL,
+  location        TEXT NOT NULL UNIQUE,
   state           TEXT NOT NULL,
-  set_at          TEXT NOT NULL,
-  expires_at      TEXT NOT NULL
+  set_at          DATETIME DEFAULT CURRENT_TIMESTAMP,
+  expires_at      DATETIME
   )
   `);
 
@@ -55,22 +55,38 @@ export function setSetting(key, value) {
   );
 }
 
-export function getOverride(location, today) {
-  return db
-    .query(
-      `
+export function getOverride(location) {
+  return (
+    db
+      .query(
+        `
       SELECT * FROM overrides
       WHERE location = ?
-      AND ? BETWEEN set_at AND expires_at
       `,
-    )
-    .get(location, today);
+      )
+      .get(location) ?? null
+  );
 }
 
-export function setOverride(location, state, set_at, expires_at) {
+export function setOverride(location, state, expires_at) {
   db.run(
-    "INSERT INTO overrides (location, today, set_at, expires_at) VALUES (?, ?, ?, ?)",
-    [location, state, set_at, expires_at],
+    `
+    INSERT INTO overrides (location, state, expires_at) VALUES (?, ?, ?)
+    ON CONFLICT(location) DO UPDATE SET
+      state = ?,
+      set_at = CURRENT_TIMESTAMP,
+      expires_at = ?
+    `,
+    [location, state, expires_at, state, expires_at],
+  );
+}
+
+export function clearOverride(location) {
+  db.run(
+    `
+    DELETE FROM overrides where id = ?
+    `,
+    [location],
   );
 }
 
