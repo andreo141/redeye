@@ -8,7 +8,7 @@ import {
   getSetting,
   setSetting,
   getOverride,
-  storeOverride,
+  setOverride,
 } from "./data/db.js";
 import { getLocation, getToday } from "./helpers/getters";
 import { logger } from "./logger.js";
@@ -70,11 +70,11 @@ const app = new Elysia()
     deleteOccupancy(params.id);
     return { ok: true };
   })
-  .get("/api/override", () => getOverride())
+  .get("/api/override", () => getOverride(getLocation(), getToday()))
   .post(
     "/api/override",
     ({ body }) => {
-      storeOverride(getLocation(), body.state, body.set_at, body.expires_at);
+      setOverride(getLocation(), body.state, body.set_at, body.expires_at);
       return { ok: true };
     },
     {
