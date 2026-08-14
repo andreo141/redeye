@@ -158,7 +158,7 @@ function validate(state: Partial<Schema>): FormError[] {
 }
 
 const { data: activeOverride } = (await useFetch("/api/override")) ?? null;
-console.log(activeOverride);
+console.log(activeOverride.value);
 
 async function setOverride() {
   try {
