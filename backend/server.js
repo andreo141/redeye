@@ -97,6 +97,8 @@ const app = new Elysia()
         setOverride(location, body.state, expiresAt);
       }
 
+      setOverride(location, body.state, expiresAt);
+
       return { ok: true };
     },
     {
