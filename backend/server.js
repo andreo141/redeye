@@ -12,6 +12,7 @@ import {
   clearOverride,
 } from "./data/db.js";
 import { getLocation, getToday } from "./helpers/getters";
+import { getArmedState } from "./helpers/getArmedState";
 import { logger } from "./logger.js";
 import { staticPlugin } from "@elysiajs/static";
 
