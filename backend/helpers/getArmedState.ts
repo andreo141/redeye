@@ -6,6 +6,7 @@ export function getArmedState(location: string, today: string) {
   const override = getOverride(location);
 
   console.log(override);
+  console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 
   return { armed: occupancy === null };
 }
