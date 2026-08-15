@@ -7,7 +7,7 @@ export function getArmedState(location: string, today: string) {
 
   return {
     armed: occupancy === null,
-    ocupany: occupancy,
+    occupancy: occupancy,
     activeOverride: override,
   };
 }
