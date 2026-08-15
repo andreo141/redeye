@@ -155,9 +155,6 @@ function validate(state: Partial<Schema>): FormError[] {
   return errors;
 }
 
-const { data: activeOverride } = await useFetch("/api/override");
-console.log(activeOverride.value);
-
 async function onToggleArmed(value: boolean) {
   try {
     await $fetch("/api/override", {
