@@ -1,5 +1,4 @@
-import { getCurrentOccupancy, getOverride, clearOverride } from "../data/db.js";
-import { resolveArmedState } from "./resolveArmedState.js";
+import { getCurrentOccupancy, getOverride } from "../data/db.js";
 
 export function getArmedState(location, today) {
   const occupancy = getCurrentOccupancy(location, today);
