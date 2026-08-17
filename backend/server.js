@@ -96,9 +96,9 @@ const app = new Elysia()
           Date.now() + getForceDisarmMinutes() * 60_000,
         ).toISOString();
         setOverride(location, body.state, expiresAt);
+      } else {
+        setOverride(location, body.state, null);
       }
-
-      setOverride(location, body.state, null);
 
       return { ok: true };
     },
@@ -124,11 +124,7 @@ const app = new Elysia()
     const today = getToday();
     return getArmedState(location, today);
   })
-  //   return {
-  //     armed: occupancy === null,
-  //     occupancy,
 
-  // })
   .get("/api/camera/status", () => ({
     online: cameraEnabled,
     url: cameraUrl,
