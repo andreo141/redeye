@@ -4,6 +4,7 @@
   "dependencies": {
     "@elysiajs/cors": "^1.4.1",
     "@elysiajs/static": "^1.4.10",
-    "mqtt": "^5.0.0"
+    "mqtt": "^5.0.0",
+    "pino": "^10.3.1"
   }
 }
