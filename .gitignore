@@ -3,3 +3,4 @@ zigbee2mqtt/data/*
 .DS_Store
 /backend/data/redeye.db
 /backend/photos/
+node_modules
