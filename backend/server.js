@@ -22,7 +22,7 @@ let cameraEnabled = false;
 let lastHeartbeat = null;
 let lastRssi = null;
 
-const DEFAULT_OVERRIDE_EXPIRATION_MINUTES = 60;
+const DEFAULT_FORCE_DISARM_MINUTES = 60;
 
 const getForceDisarmMinutes = () =>
   Number(getSetting("force_disarm_minutes")) || DEFAULT_FORCE_DISARM_MINUTES;
@@ -77,7 +77,7 @@ const app = new Elysia()
     deleteOccupancy(params.id);
     return { ok: true };
   })
-  .get("/api/override", () => getOverride(getLocation(), getToday()))
+  .get("/api/override", () => getOverride(getLocation()))
   .post(
     "/api/override",
     ({ body }) => {
