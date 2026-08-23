@@ -1,12 +1,25 @@
-import { getCurrentOccupancy, getOverride } from "../data/db.js";
+import { clearOverride, getCurrentOccupancy, getOverride } from "../data/db.js";
 
 export function getArmedState(location, today) {
   const occupancy = getCurrentOccupancy(location, today);
   const override = getOverride(location);
 
+  const overrideExpired =
+    override?.expires_at != null &&
+    new Date(override.expires_at).getTime() - Date.now() <= 0;
+
+  if (overrideExpired) clearOverride(location);
+
+  const activeOverride = overrideExpired ? null : override;
+  const isPropertyUnoccupied = occupancy === null;
+
+  const armed = !activeOverride
+    ? isPropertyUnoccupied
+    : activeOverride.state === "armed";
+
   return {
-    armed: occupancy === null,
+    armed: armed,
     occupancy: occupancy,
-    activeOverride: override,
+    override: activeOverride,
   };
 }
