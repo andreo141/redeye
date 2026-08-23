@@ -84,7 +84,7 @@ export function setOverride(location, state, expires_at) {
 export function clearOverride(location) {
   db.run(
     `
-    DELETE FROM overrides where id = ?
+    DELETE FROM overrides WHERE location = ?
     `,
     [location],
   );
