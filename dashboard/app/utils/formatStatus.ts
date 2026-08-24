@@ -2,18 +2,19 @@ import type { SystemStatus } from "~/types/status";
 import { formatDate } from "./formatDate";
 
 export function formatStatus(status: SystemStatus) {
-  console.log(status);
-  const activeOverride = status.activeOverride;
+  const armed = status.armed;
+  const override = status.override;
 
-  if (activeOverride?.state === "armed" || status.armed) {
-    return "ARMED - All clear";
-  }
-
-  if (activeOverride?.state === "disarmed" || !status.armed) {
-    let msg = "DISARMED";
-    if (!activeOverride && status.occupancy) {
-      msg += `- ${status.occupancy.occupant_name} until ${formatDate(status.occupancy.departure_date)}`;
-    }
-    return msg;
+  if (!override && armed) {
+    return "ARMED - All Clear";
+  } else if (!override && !armed && status.occupancy) {
+    return `DISARMED - Occupied by ${status.occupancy?.occupant_name.toUpperCase()} until ${formatDate(status.occupancy?.departure_date)}`;
+  } else if (override?.state === "armed") {
+    return `ARMED - Set during occupancy from ${status.occupancy?.occupant_name.toUpperCase()}`;
+  } else if (override?.expires_at) {
+    const overrideMinutesRemaining = Math.floor(
+      (new Date(override.expires_at).getTime() - Date.now()) / 60000 + 1,
+    );
+    return `DISARMED - Temporary for ${overrideMinutesRemaining} minutes`;
   }
 }
