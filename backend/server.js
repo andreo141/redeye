@@ -63,6 +63,7 @@ const app = new Elysia()
         body.arrivalDate,
         body.departureDate,
       );
+      clearOverride(getLocation()); // FIXME: assumes single location. if more locations are added this should change
       return { ok: true };
     },
     {
@@ -75,6 +76,7 @@ const app = new Elysia()
   )
   .delete("/api/occupancies/:id", ({ params }) => {
     deleteOccupancy(params.id);
+    clearOverride(getLocation()); // FIXME: assumes single location. if more locations are added this should change
     return { ok: true };
   })
   .get("/api/override", () => getOverride(getLocation()))
