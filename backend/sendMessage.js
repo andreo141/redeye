@@ -1,6 +1,6 @@
 import mqtt from "mqtt";
 import isCoolingDown from "./helpers/isCoolingDown.js";
-import { storeAlert, isLocationOccupied, getSetting } from "./data/db.js";
+import { storeAlert, getSetting } from "./data/db.js";
 import { getCameraUrl } from "./server.js";
 import { logger } from "./logger.js";
 import { getArmedState } from "./helpers/getArmedState.js";
