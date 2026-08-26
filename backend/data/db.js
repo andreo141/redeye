@@ -137,10 +137,6 @@ export function getCurrentOccupancy(location, today) {
   );
 }
 
-export function isLocationOccupied(location, today) {
-  return getCurrentOccupancy(location, today) !== null;
-}
-
 export function deleteOccupancy(id) {
   db.run("DELETE FROM occupancies WHERE id = ?", [id]);
 }
