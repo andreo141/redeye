@@ -25,7 +25,8 @@ let lastRssi = null;
 const DEFAULT_FORCE_DISARM_MINUTES = 60;
 
 const getForceDisarmMinutes = () =>
-  Number(getSetting("force_disarm_minutes")) || DEFAULT_FORCE_DISARM_MINUTES;
+  Number(getSetting("override_expiration_minutes")) ||
+  DEFAULT_FORCE_DISARM_MINUTES;
 
 const app = new Elysia()
   .use(
@@ -37,6 +38,8 @@ const app = new Elysia()
 
   .get("/api/settings", () => ({
     location: getLocation(),
+    override_expiration_minutes:
+      getSetting("override_expiration_minutes") ?? DEFAULT_FORCE_DISARM_MINUTES,
   }))
   .post(
     "/api/settings",
@@ -44,11 +47,16 @@ const app = new Elysia()
       if (body.location !== undefined) {
         setSetting("location_name", body.location);
       }
+      setSetting(
+        "override_expiration_minutes",
+        body.override_expiration_minutes,
+      );
       return { ok: true };
     },
     {
       body: t.Object({
         location: t.Optional(t.String()),
+        override_expiration_minutes: t.Optional(t.Number()),
       }),
     },
   )

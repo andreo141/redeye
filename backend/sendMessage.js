@@ -3,6 +3,7 @@ import isCoolingDown from "./helpers/isCoolingDown.js";
 import { storeAlert, isLocationOccupied, getSetting } from "./data/db.js";
 import { getCameraUrl } from "./server.js";
 import { logger } from "./logger.js";
+import { getArmedState } from "./helpers/getArmedState.js";
 
 const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -65,7 +66,9 @@ mqttClient.on("message", async (topic, payload) => {
     timeZone: "Europe/Brussels",
   });
 
-  if (isLocationOccupied(sensorLocation, today)) {
+  const { armed } = getArmedState(sensorLocation, today);
+
+  if (!armed) {
     logger.info("Location is currently occupied. Alert not sent.");
     return;
   }
