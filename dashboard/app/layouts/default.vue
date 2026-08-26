@@ -121,7 +121,7 @@
                   label="Force-disarm expiration minutes"
                   name="location"
                 >
-                  <UInput v-model="settings.override_expiration_minutes" />
+                  <UInput v-model="settings.forceDisarmMinutes" />
                 </UFormField>
                 <UButton type="submit" variant="subtle"> Save </UButton>
               </UForm>
@@ -152,11 +152,10 @@ const armed = computed(() => systemStatus.value?.armed ?? false);
 const { data: currentSettings } = await useFetch<Settings>("/api/settings");
 const settings = reactive<Settings>({
   location: "",
-  override_expiration_minutes: 0,
+  forceDisarmMinutes: 0,
 });
 settings.location = currentSettings.value?.location ?? "";
-settings.override_expiration_minutes =
-  currentSettings.value?.override_expiration_minutes ?? 0;
+settings.forceDisarmMinutes = currentSettings.value?.forceDisarmMinutes ?? 0;
 
 type Schema = typeof settings;
 
@@ -192,9 +191,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       method: "POST",
       body: {
         location: event.data.location,
-        override_expiration_minutes: Number(
-          event.data.override_expiration_minutes,
-        ),
+        forceDisarmMinutes: Number(event.data.forceDisarmMinutes),
       },
     });
   } catch (err) {
