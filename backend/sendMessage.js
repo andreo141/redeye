@@ -4,6 +4,7 @@ import { storeAlert, getSetting } from "./data/db.js";
 import { getCameraUrl } from "./server.js";
 import { logger } from "./logger.js";
 import { getArmedState } from "./helpers/getArmedState.js";
+import { getToday } from "./helpers/getters.js";
 
 const token = process.env.TELEGRAM_TOKEN;
 const chatId = process.env.TELEGRAM_CHAT_ID;
@@ -62,11 +63,8 @@ mqttClient.on("message", async (topic, payload) => {
     timeZone: "Europe/Brussels",
   });
   const sensorLocation = getSetting("location_name") ?? "Unknown location";
-  const today = new Date().toLocaleDateString("en-CA", {
-    timeZone: "Europe/Brussels",
-  });
 
-  const { armed } = getArmedState(sensorLocation, today);
+  const { armed } = getArmedState(sensorLocation, getToday());
 
   if (!armed) {
     logger.info("Location is currently occupied. Alert not sent.");
