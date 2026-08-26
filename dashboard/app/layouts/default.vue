@@ -116,7 +116,13 @@
                 <UFormField label="Sensor location name" name="location">
                   <UInput v-model="settings.location" />
                 </UFormField>
-
+                <UFormField
+                  description="The amount of minutes before alarm falls back to armed state"
+                  label="Force-disarm expiration minutes"
+                  name="location"
+                >
+                  <UInput v-model="settings.override_expiration_minutes" />
+                </UFormField>
                 <UButton type="submit" variant="subtle"> Save </UButton>
               </UForm>
             </template>
@@ -144,8 +150,13 @@ const isSettingsOpen = ref(false);
 const armed = computed(() => systemStatus.value?.armed ?? false);
 
 const { data: currentSettings } = await useFetch<Settings>("/api/settings");
-const settings = reactive<Settings>({ location: "" });
+const settings = reactive<Settings>({
+  location: "",
+  override_expiration_minutes: 0,
+});
 settings.location = currentSettings.value?.location ?? "";
+settings.override_expiration_minutes =
+  currentSettings.value?.override_expiration_minutes ?? 0;
 
 type Schema = typeof settings;
 
@@ -181,6 +192,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       method: "POST",
       body: {
         location: event.data.location,
+        override_expiration_minutes: Number(
+          event.data.override_expiration_minutes,
+        ),
       },
     });
   } catch (err) {
