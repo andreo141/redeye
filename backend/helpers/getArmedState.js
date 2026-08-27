@@ -8,7 +8,7 @@ export function getArmedState(location, today) {
     override?.expires_at != null &&
     new Date(override.expires_at).getTime() - Date.now() <= 0;
 
-  if (overrideExpired) clearOverride(location);
+  if (overrideExpired) clearOverride(location); // FIXME: consider refactoring this. Delete action inside read function
 
   const activeOverride = overrideExpired ? null : override;
   const isPropertyUnoccupied = occupancy === null;
