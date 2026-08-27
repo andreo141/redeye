@@ -52,7 +52,7 @@ const app = new Elysia()
     {
       body: t.Object({
         location: t.Optional(t.String()),
-        forceDisarmMinutes: t.Optional(t.Number()),
+        forceDisarmMinutes: t.Optional(t.Number({ minimum: 1 })),
       }),
     },
   )
