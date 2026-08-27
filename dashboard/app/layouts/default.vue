@@ -119,9 +119,9 @@
                 <UFormField
                   description="The amount of minutes before alarm falls back to armed state"
                   label="Force-disarm expiration minutes"
-                  name="location"
+                  name="forceDisarmMinutes"
                 >
-                  <UInput v-model="settings.forceDisarmMinutes" />
+                  <UInput v-model="settings.forceDisarmMinutes" type="number" />
                 </UFormField>
                 <UButton type="submit" variant="subtle"> Save </UButton>
               </UForm>
@@ -151,17 +151,19 @@ const armed = computed(() => systemStatus.value?.armed ?? false);
 
 const { data: currentSettings } = await useFetch<Settings>("/api/settings");
 const settings = reactive<Settings>({
-  location: "",
-  forceDisarmMinutes: 0,
+  location: currentSettings.value?.location ?? "",
+  forceDisarmMinutes: currentSettings.value?.forceDisarmMinutes ?? 60,
 });
-settings.location = currentSettings.value?.location ?? "";
-settings.forceDisarmMinutes = currentSettings.value?.forceDisarmMinutes ?? 0;
-
 type Schema = typeof settings;
 
 function validate(state: Partial<Schema>): FormError[] {
   const errors = [];
   if (!state.location) errors.push({ name: "location", message: "Required" });
+  if (!state.forceDisarmMinutes || state.forceDisarmMinutes < 1)
+    errors.push({
+      name: "forceDisarmMinutes",
+      message: "Minimum expiration length of 1 minute required",
+    });
   return errors;
 }
 
@@ -173,6 +175,7 @@ async function onToggleArmed(value: boolean) {
         state: value ? "armed" : "disarmed",
       },
     });
+    refreshSystemStatus();
   } catch (err) {
     const errorMsg = "Something went wrong while setting the armed state";
     toast.add({
@@ -191,7 +194,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       method: "POST",
       body: {
         location: event.data.location,
-        forceDisarmMinutes: Number(event.data.forceDisarmMinutes),
+        forceDisarmMinutes: event.data.forceDisarmMinutes,
       },
     });
   } catch (err) {
