@@ -159,7 +159,11 @@ type Schema = typeof settings;
 function validate(state: Partial<Schema>): FormError[] {
   const errors = [];
   if (!state.location) errors.push({ name: "location", message: "Required" });
-  if (!state.forceDisarmMinutes || state.forceDisarmMinutes < 1)
+  if (
+    state.forceDisarmMinutes == null ||
+    state.forceDisarmMinutes < 1 ||
+    !Number.isInteger(state.forceDisarmMinutes)
+  )
     errors.push({
       name: "forceDisarmMinutes",
       message: "Minimum expiration length of 1 minute required",
