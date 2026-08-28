@@ -55,16 +55,6 @@
           Occupancies
         </NuxtLink>
       </nav>
-
-      <div class="sidebar-footer">
-        <div class="user">
-          <div class="avatar">A</div>
-          <div class="user-info">
-            <div class="user-name">Andreo</div>
-            <div class="user-role">Admin</div>
-          </div>
-        </div>
-      </div>
     </aside>
 
     <main class="main">
@@ -484,5 +474,11 @@ onUnmounted(() => clearInterval(statusInterval));
   flex: 1;
   padding: 24px;
   overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    display: none;
+  }
 }
 </style>
