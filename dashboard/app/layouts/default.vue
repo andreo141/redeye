@@ -72,10 +72,10 @@
           <div v-else class="status-pill-bad">Disarmed</div>
           <div v-if="cameraEnabled" class="status-pill-good">
             <div class="status-dot-good" />
-            <UIcon name="i-lucide-camera"></UIcon>
+            <UIcon name="i-lucide-camera" size="large" />
           </div>
           <div v-else class="status-pill-bad">
-            <UIcon name="i-lucide-video" size="large"></UIcon>
+            <UIcon name="i-lucide-video" size="large" />
           </div>
         </div>
 
@@ -84,16 +84,23 @@
           class="rssi-info"
           :class="`rssi-${rssiStatus}`"
         >
+          <span v-if="rssiStatus === 'excellent'">
+            <UIcon name="i-lucide-signal" size="large" />
+          </span>
           <span v-if="rssiStatus === 'good'">
-            <UIcon name="i-lucide-wifi-high" />
+            <UIcon name="i-lucide-signal-high" size="large" />
+          </span>
+          <span v-if="rssiStatus === 'medium'">
+            <UIcon name="i-lucide-signal-medium" size="large" />
           </span>
           <span v-if="rssiStatus === 'weak'">
-            <UIcon name="i-lucide-wifi-low" />
+            <UIcon name="i-lucide-signal-low" size="large" />
           </span>
           <span v-if="rssiStatus === 'critical'">
-            <UIcon name="i-lucide-wifi-zero" />
+            <UIcon name="i-lucide-signal-zero" size="large" />
           </span>
         </div>
+
         <div class="settings-menu">
           <USlideover
             v-model:open="isSettingsOpen"
@@ -228,7 +235,9 @@ const lastRssi = computed(() => cameraStatus.value?.lastRssi ?? null);
 const rssiStatus = computed(() => {
   const rssi = cameraStatus.value?.lastRssi;
   if (rssi === null || rssi === undefined) return "unknown";
-  if (rssi >= -70) return "good";
+  if (rssi >= -50) return "excellent";
+  if (rssi >= -60) return "good";
+  if (rssi >= -70) return "medium";
   if (rssi >= -80) return "weak";
   return "critical";
 });
