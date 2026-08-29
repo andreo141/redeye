@@ -91,11 +91,16 @@ button:not(:disabled),
   color: #5a5a5a;
   font-family: "DM Mono", monospace;
 }
-.rssi-good {
+
+.rssi-good,
+.rssi-excellent {
   color: #4a9e4a;
 }
-.rssi-weak {
+.rssi-medium {
   color: #baa020;
+}
+.rssi-weak {
+  color: #e05f09;
 }
 .rssi-critical {
   color: #e53e3e;

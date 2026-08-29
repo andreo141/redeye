@@ -68,38 +68,37 @@
             :model-value="armed"
             @update:model-value="onToggleArmed"
           />
-          <div v-if="armed" class="status-pill-good">Armed</div>
-          <div v-else class="status-pill-bad">Disarmed</div>
-          <div v-if="cameraEnabled" class="status-pill-good">
-            <div class="status-dot-good" />
-            <UIcon name="i-lucide-camera" size="large" />
-          </div>
-          <div v-else class="status-pill-bad">
-            <UIcon name="i-lucide-video" size="large" />
-          </div>
+          <UTooltip v-if="cameraEnabled" text="Camera enabled">
+            <UIcon name="i-lucide-cctv" size="large" class="status-good" />
+          </UTooltip>
+          <UTooltip v-else class="status-bad" text="Camera disabled">
+            <UIcon name="i-lucide-cctv-off" size="large" class="status-bad" />
+          </UTooltip>
         </div>
 
-        <div
-          v-if="cameraEnabled && lastRssi !== null"
-          class="rssi-info"
-          :class="`rssi-${rssiStatus}`"
-        >
-          <span v-if="rssiStatus === 'excellent'">
-            <UIcon name="i-lucide-signal" size="large" />
-          </span>
-          <span v-if="rssiStatus === 'good'">
-            <UIcon name="i-lucide-signal-high" size="large" />
-          </span>
-          <span v-if="rssiStatus === 'medium'">
-            <UIcon name="i-lucide-signal-medium" size="large" />
-          </span>
-          <span v-if="rssiStatus === 'weak'">
-            <UIcon name="i-lucide-signal-low" size="large" />
-          </span>
-          <span v-if="rssiStatus === 'critical'">
-            <UIcon name="i-lucide-signal-zero" size="large" />
-          </span>
-        </div>
+        <UTooltip text="Camera signal strength">
+          <div
+            v-if="cameraEnabled && lastRssi !== null"
+            class="rssi-info"
+            :class="`rssi-${rssiStatus}`"
+          >
+            <span v-if="rssiStatus === 'excellent'">
+              <UIcon name="i-lucide-signal" size="large" />
+            </span>
+            <span v-if="rssiStatus === 'good'">
+              <UIcon name="i-lucide-signal-high" size="large" />
+            </span>
+            <span v-if="rssiStatus === 'medium'">
+              <UIcon name="i-lucide-signal-medium" size="large" />
+            </span>
+            <span v-if="rssiStatus === 'weak'">
+              <UIcon name="i-lucide-signal-low" size="large" />
+            </span>
+            <span v-if="rssiStatus === 'critical'">
+              <UIcon name="i-lucide-signal-zero" size="large" />
+            </span>
+          </div>
+        </UTooltip>
 
         <div class="settings-menu">
           <USlideover
@@ -432,7 +431,7 @@ onUnmounted(() => clearInterval(statusInterval));
   gap: 12px;
 }
 
-.status-pill-good {
+.status-good {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -442,15 +441,7 @@ onUnmounted(() => clearInterval(statusInterval));
   font-family: "DM Mono", monospace;
 }
 
-.status-dot-good {
-  width: 6px;
-  height: 6px;
-  background: #4a9e4a;
-  border-radius: 50%;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.status-pill-bad {
+.status-bad {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -458,13 +449,6 @@ onUnmounted(() => clearInterval(statusInterval));
   font-size: 11px;
   color: #9e4a4a;
   font-family: "DM Mono", monospace;
-}
-
-.status-dot-bad {
-  width: 6px;
-  height: 6px;
-  background: #9e4a4a;
-  border-radius: 50%;
 }
 
 .overview-card {
