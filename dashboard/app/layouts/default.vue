@@ -72,11 +72,10 @@
           <div v-else class="status-pill-bad">Disarmed</div>
           <div v-if="cameraEnabled" class="status-pill-good">
             <div class="status-dot-good" />
-            Camera online
+            <UIcon name="i-lucide-camera"></UIcon>
           </div>
           <div v-else class="status-pill-bad">
-            <div class="status-dot-bad" />
-            Camera offline
+            <UIcon name="i-lucide-video" size="large"></UIcon>
           </div>
         </div>
 
@@ -85,9 +84,15 @@
           class="rssi-info"
           :class="`rssi-${rssiStatus}`"
         >
-          RSSI: {{ lastRssi }} dBm
-          <span v-if="rssiStatus === 'weak'">: weak signal</span>
-          <span v-if="rssiStatus === 'critical'">: very weak signal</span>
+          <span v-if="rssiStatus === 'good'">
+            <UIcon name="i-lucide-wifi-high" />
+          </span>
+          <span v-if="rssiStatus === 'weak'">
+            <UIcon name="i-lucide-wifi-low" />
+          </span>
+          <span v-if="rssiStatus === 'critical'">
+            <UIcon name="i-lucide-wifi-zero" />
+          </span>
         </div>
         <div class="settings-menu">
           <USlideover
