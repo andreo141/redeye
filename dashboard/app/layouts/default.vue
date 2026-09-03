@@ -5,53 +5,16 @@
         <div class="logo-dot" />
         <span class="logo-text"><NuxtLink to="/">RedEye</NuxtLink></span>
       </div>
-
       <nav class="nav">
         <span class="nav-label">Monitor</span>
-
         <NuxtLink to="/overview" class="nav-item" active-class="active">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <rect x="1" y="1" width="6" height="6" rx="1" />
-            <rect x="9" y="1" width="6" height="6" rx="1" />
-            <rect x="1" y="9" width="6" height="6" rx="1" />
-            <rect x="9" y="9" width="6" height="6" rx="1" />
-          </svg>
           Overview
         </NuxtLink>
-
         <NuxtLink to="/alerts" class="nav-item" active-class="active">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <circle cx="8" cy="8" r="6" />
-            <path d="M8 5v3l2 2" />
-          </svg>
           Alert history
         </NuxtLink>
-
         <span class="nav-label" style="margin-top: 8px">Manage</span>
-
         <NuxtLink to="/occupancies" class="nav-item" active-class="active">
-          <svg
-            class="nav-icon"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.5"
-          >
-            <rect x="1" y="2" width="14" height="12" rx="1.5" />
-            <path d="M5 2v12M1 6h14" />
-          </svg>
           Occupancies
         </NuxtLink>
       </nav>
@@ -59,6 +22,20 @@
 
     <main class="main">
       <div class="topbar">
+        <div class="nav-mobile">
+          <UNavigationMenu
+            :items="navItems"
+            :ui="{
+              root: 'justify-around border-t border-default py-2',
+              item: 'py-0',
+              link: 'flex-col gap-1 px-3',
+              linkLeadingIcon: 'size-5',
+              linkLabel: 'text-[10px]/3 font-normal',
+            }"
+            color="primary"
+            class="w-full"
+          />
+        </div>
         <span class="page-title">{{ title }}</span>
         <div class="topbar-right">
           <USwitch
@@ -143,18 +120,45 @@ import { useRoute } from "vue-router";
 import type { CameraStatus } from "~/types/cameraStatus";
 import type { SystemStatus } from "~/types/status";
 import type { Settings } from "~/types/settings";
-import type { FormError, FormSubmitEvent } from "@nuxt/ui";
+import type { FormError, FormSubmitEvent, NavigationMenuItem } from "@nuxt/ui";
 
 const toast = useToast();
 const isSettingsOpen = ref(false);
 
 const armed = computed(() => systemStatus.value?.armed ?? false);
 
+const title = computed(() => titles[route.path]);
+
+const titles: Record<string, string> = {
+  "/overview": "Overview",
+  "/alerts": "Alert history",
+  "/occupancies": "Occupancies",
+};
+
 const { data: currentSettings } = await useFetch<Settings>("/api/settings");
 const settings = reactive<Settings>({
   location: currentSettings.value?.location ?? "",
   forceDisarmMinutes: currentSettings.value?.forceDisarmMinutes ?? 60,
 });
+
+const navItems = ref<NavigationMenuItem[]>([
+  {
+    icon: "i-lucide-table-of-contents",
+    label: "Overview",
+    to: "/overview",
+  },
+  {
+    icon: "i-lucide-rotate-ccw-clock",
+    label: "Alert History",
+    to: "/alerts",
+  },
+  {
+    icon: "i-lucide-calendar",
+    label: "Occupancies",
+    to: "/occupancies",
+  },
+]);
+
 type Schema = typeof settings;
 
 function validate(state: Partial<Schema>): FormError[] {
@@ -240,15 +244,6 @@ const rssiStatus = computed(() => {
   if (rssi >= -80) return "weak";
   return "critical";
 });
-
-const title = computed(() => titles[route.path]);
-
-const titles: Record<string, string> = {
-  "/overview": "Overview",
-  "/alerts": "Alert history",
-  "/occupancies": "Occupancies",
-  "/sensors": "Sensors",
-};
 
 onMounted(() => {
   statusInterval = setInterval(() => {
@@ -381,20 +376,6 @@ onUnmounted(() => clearInterval(statusInterval));
   flex-shrink: 0;
 }
 
-.user-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.user-name {
-  font-size: 12px;
-  color: #888;
-  font-weight: 400;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .user-role {
   font-size: 10px;
   color: #3a3a3a;
@@ -404,7 +385,6 @@ onUnmounted(() => clearInterval(statusInterval));
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .topbar {
@@ -475,7 +455,14 @@ onUnmounted(() => clearInterval(statusInterval));
 }
 
 @media (max-width: 768px) {
-  .sidebar {
+  .sidebar,
+  .page-title {
+    display: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .nav-mobile {
     display: none;
   }
 }
