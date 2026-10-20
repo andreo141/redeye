@@ -1,3 +1,4 @@
+.env
 zigbee2mqtt/data/*
 !zigbee2mqtt/data/configuration.example.yaml
 .DS_Store
