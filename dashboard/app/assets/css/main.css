@@ -41,7 +41,7 @@ button:not(:disabled),
 
 .overview-container {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 
@@ -67,10 +67,6 @@ button:not(:disabled),
 }
 
 @media (max-width: 768px) {
-  .overview-container {
-    grid-template-columns: 1fr;
-  }
-
   #overview-recent-alerts-card {
     grid-column: span 1;
   }

@@ -24,14 +24,6 @@
         <div class="overview-card-value">{{ lastMotion }}</div>
       </UCard>
       <UCard
-        id="overview-alerts-today-card"
-        class="overview-card"
-        variant="soft"
-      >
-        <h1>Alerts Today</h1>
-        <div class="overview-card-value">{{ alertsToday }}</div>
-      </UCard>
-      <UCard
         id="overview-recent-alerts-card"
         class="overview-card"
         variant="soft"
@@ -90,24 +82,6 @@ const lastMotion = computed(() => {
       minute: '2-digit',
     }) + ` at ${lastSensorAlert.location}`
   )
-})
-
-const todayString = computed(() => {
-  return new Date(now.value).toLocaleDateString('en-GB', {
-    timeZone: 'Europe/Brussels',
-  })
-})
-
-const alertsToday = computed(() => {
-  return alerts.value.filter((alert) => {
-    const alertDate = new Date(alert.created_at + 'Z')
-
-    return (
-      alertDate.toLocaleDateString('en-GB', {
-        timeZone: 'Europe/Brussels',
-      }) === todayString.value
-    )
-  }).length
 })
 
 const fetchAlerts = async () => {
