@@ -1,3 +1,5 @@
+const apiTarget = process.env.API_PROXY_TARGET ?? "http://backend:3001";
+
 export default defineNuxtConfig({
   modules: ["@nuxt/eslint", "@nuxt/ui"],
 
@@ -7,57 +9,26 @@ export default defineNuxtConfig({
 
   routeRules: {
     "/": { prerender: true, redirect: "/overview" },
-  },
-
-  $development: {
-    routeRules: {
-      "/api/alerts/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/alerts/**`,
-      },
-      "/api/camera/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/camera/**`,
-      },
-      "/api/photos/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/photos/**`,
-      },
-      "/api/occupancies/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/occupancies/**`,
-      },
-      "/api/settings/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/settings/**`,
-      },
-      "/api/status/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/status/**`,
-      },
-      "/api/override/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/override/**`,
-      },
+    "/api/alerts/**": {
+      proxy: `${apiTarget}/api/alerts/**`,
     },
-  },
-
-  $production: {
-    routeRules: {
-      "/api/alerts/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/alerts/**`,
-      },
-      "/api/camera/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/camera/**`,
-      },
-      "/api/photos/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/photos/**`,
-      },
-      "/api/occupancies/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/occupancies/**`,
-      },
-      "/api/settings/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/settings/**`,
-      },
-      "/api/status/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/status/**`,
-      },
-      "/api/override/**": {
-        proxy: `${process.env.API_PROXY_TARGET}/api/override/**`,
-      },
+    "/api/camera/**": {
+      proxy: `${apiTarget}/api/camera/**`,
+    },
+    "/api/photos/**": {
+      proxy: `${apiTarget}/api/photos/**`,
+    },
+    "/api/occupancies/**": {
+      proxy: `${apiTarget}/api/occupancies/**`,
+    },
+    "/api/settings/**": {
+      proxy: `${apiTarget}/api/settings/**`,
+    },
+    "/api/status/**": {
+      proxy: `${apiTarget}/api/status/**`,
+    },
+    "/api/override/**": {
+      proxy: `${apiTarget}/api/override/**`,
     },
   },
 
@@ -75,3 +46,4 @@ export default defineNuxtConfig({
     },
   },
 });
+
